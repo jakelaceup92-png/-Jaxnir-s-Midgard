@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jaxnir's Midgard</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}</style></head><body><canvas id="c"></canvas><script>
 const c=document.getElementById('c'),ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;let W=0,H=0,D=1,last=performance.now();
-const wolf=new Image();wolf.crossOrigin='anonymous';wolf.src='https://opengameart.org/sites/default/files/wolf%20walk.png';
+const wolf=new Image();wolf.src='https://opengameart.org/sites/default/files/wolf%20walk.png';
 const actors=[],leaves=[],stones=[],tufts=[];
 function resize(){D=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;ctx.setTransform(D,0,0,D,0,0);ctx.imageSmoothingEnabled=false;if(!stones.length){for(let i=0;i<46;i++)stones.push({x:Math.random()*W,y:Math.random(),w:3+Math.random()*10,h:2+Math.random()*5});for(let i=0;i<38;i++)tufts.push({x:Math.random()*W,y:Math.random(),s:.7+Math.random()*.7,p:Math.random()*20})}}
 addEventListener('resize',resize);resize();
