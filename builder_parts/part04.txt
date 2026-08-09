@@ -1,0 +1,30 @@
+=(ph*(.32+.035*j)+j*.14)%1
+        t=q*2 if q<.5 else (1-q)*2
+        x=x1+(x2-x1)*t
+        step=math.sin(ph*2*math.pi*10+j)*2.4
+        draw_villager_hi(fr,x,y,coat,step,dirc,carry)
+    draw_longship_hi(fr,ph)
+    draw_dragon_hi(fr,ph)
+    # drifting snow
+    d=ImageDraw.Draw(fr)
+    for s in range(46):
+        sx=(s*181+i*17)%W; sy=(s*29+i*4+(s%7)*8)%H
+        if sy<112:
+            r=1 if s%5 else 1.6
+            d.ellipse(((sx-r)*S,(sy-r)*S,(sx+r)*S,(sy+r)*S),fill=(215,240,255,90))
+    # final grade: slight soft glow + sharpen after downsample
+    small=fr.resize((W,H),Image.Resampling.LANCZOS)
+    # local bloom from bright pixels
+    arr=np.array(small)
+    lum=arr[:,:,:3].max(axis=2)
+    mask=np.where(lum>190, np.clip((lum-190)*2.5,0,90),0).astype(np.uint8)
+    bloom=small.copy(); bloom.putalpha(Image.fromarray(mask,'L'))
+    bloom=bloom.filter(ImageFilter.GaussianBlur(2.2))
+    small=Image.alpha_composite(small,bloom)
+    small=small.filter(ImageFilter.UnsharpMask(radius=1.1,percent=115,threshold=3))
+    frames.append(small.convert('P',palette=Image.Palette.ADAPTIVE,colors=255))
+
+gif='midgard_bottom.gif'
+frames[0].save(gif,save_all=True,append_images=frames[1:],duration=100,loop=0,optimize=True,disposal=2)
+print(os.path.getsize(gif), gif)
+frames[20].convert('RGBA').save('kinkade_frame20.png')
