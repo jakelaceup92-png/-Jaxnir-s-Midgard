@@ -1,0 +1,96 @@
+glow(cozy,x+wd*.35,y+hd*.5,8,(255,155,58),60,4)
+    d=ImageDraw.Draw(cozy)
+    d.rectangle(((x+wd*.35-2)*S,(y+hd*.5-2)*S,(x+wd*.35+2)*S,(y+hd*.5+2)*S),fill=(255,216,130,255))
+
+# Snowy fence along the left village edge
+for xx in range(385,735,28):
+    d.rectangle((xx*S,131*S,(xx+3)*S,145*S),fill=(72,51,36,230))
+d.line((385*S,135*S,735*S,135*S),fill=(100,68,43,220),width=2*S)
+d.line((385*S,140*S,735*S,140*S),fill=(100,68,43,190),width=2*S)
+d.line((385*S,134*S,735*S,134*S),fill=(192,219,232,95),width=S)
+
+# Wood pile by blacksmith
+for yy in [139,143,147]:
+    for xx in range(1120,1165,10):
+        d.ellipse(((xx-4)*S,(yy-3)*S,(xx+4)*S,(yy+3)*S),fill=(94,59,36,255),outline=(51,35,27,255),width=S)
+
+# Warm path glows / footprints
+for x,y in [(470,141),(520,142),(600,141),(690,140),(760,139),(840,139),(920,140),(1000,141)]:
+    glow(cozy,x,y,11,(255,165,69),20,4)
+    d=ImageDraw.Draw(cozy)
+    d.ellipse(((x-2)*S,(y-1)*S,(x+2)*S,(y+1)*S),fill=(104,126,136,65))
+
+# Small runestone with cyan rune
+d.rounded_rectangle((1150*S,120*S,1160*S,146*S),radius=2*S,fill=(56,61,66,255))
+d.line((1155*S,124*S,1155*S,139*S),fill=(68,178,238,180),width=S)
+d.line((1151*S,130*S,1159*S,130*S),fill=(68,178,238,180),width=S)
+glow(cozy,1155,131,12,(55,170,255),30,5)
+
+# reflected warm bands in water from dock lanterns
+ref=Image.new('RGBA',(w,h),(0,0,0,0)); rd=ImageDraw.Draw(ref)
+for xx in [1230,1410,1590,1700]:
+    for k in range(5):
+        yy=126+k*5
+        half=5+k*4
+        rd.line(((xx-half)*S,yy*S,(xx+half)*S,yy*S),fill=(255,164,65,max(8,42-k*7)),width=S)
+cozy.alpha_composite(ref.filter(ImageFilter.GaussianBlur(1.2*S)))
+
+# soft village bloom and foreground vignette
+glow(cozy,760,118,240,(255,141,46),13,22)
+vign=Image.new('RGBA',(w,h),(0,0,0,0)); vd=ImageDraw.Draw(vign)
+vd.rectangle((0,0,w,h),fill=(0,0,0,0))
+# darken outer edges using blurred rectangles
+vd.rectangle((0,0,260*S,h),fill=(0,4,12,75))
+vd.rectangle(((W-260)*S,0,w,h),fill=(0,4,12,75))
+cozy.alpha_composite(vign.filter(ImageFilter.GaussianBlur(50*S)))
+cozy.resize((W,H),Image.Resampling.LANCZOS).save('kinkade_cozy_preview.png')
+print('done')
+
+from PIL import Image, ImageDraw, ImageFilter
+import numpy as np, math, random, os
+anim_rng=random.Random(444)
+
+def draw_villager_hi(img,x,y,coat=(74,95,111),step=0,dirc=1,carry=False):
+    d=ImageDraw.Draw(img)
+    d.ellipse(((x-6)*S,(y+3)*S,(x+6)*S,(y+6)*S),fill=(0,0,0,50))
+    d.line(((x-2)*S,(y-2)*S,(x-3+step*dirc)*S,(y+6)*S),fill=(23,25,29,255),width=2*S)
+    d.line(((x+2)*S,(y-2)*S,(x+3-step*dirc)*S,(y+6)*S),fill=(23,25,29,255),width=2*S)
+    d.polygon([(int((x-6)*S),int((y-15)*S)),(int((x+6)*S),int((y-15)*S)),
+               (int((x+7)*S),int((y-2)*S)),(int((x-7)*S),int((y-2)*S))],fill=(*coat,255))
+    d.line(((x-5)*S,(y-12)*S,(x+5)*S,(y-12)*S),fill=(149,165,175,70),width=S)
+    d.rectangle(((x-7)*S,(y-8)*S,(x+7)*S,(y-5)*S),fill=(47,35,30,255))
+    d.ellipse(((x-4)*S,(y-23)*S,(x+4)*S,(y-15)*S),fill=(184,132,99,255))
+    d.polygon([(int((x-4)*S),int((y-20)*S)),(int(x*S),int((y-25)*S)),(int((x+4)*S),int((y-20)*S)),
+               (int((x+4)*S),int((y-17)*S)),(int((x-4)*S),int((y-17)*S))],fill=(47,36,30,255))
+    if carry:
+        bx=x+6*dirc
+        if dirc>0:
+            d.rectangle((bx*S,(y-12)*S,(bx+8)*S,(y-5)*S),fill=(105,72,45,255))
+        else:
+            d.rectangle(((bx-8)*S,(y-12)*S,bx*S,(y-5)*S),fill=(105,72,45,255))
+
+def draw_longship_hi(img,phase):
+    # local high-res layer then slight rotation around center
+    layer=Image.new('RGBA',(w,h),(0,0,0,0)); d=ImageDraw.Draw(layer)
+    x=1330; y=122+math.sin(phase*2*math.pi)*1.7
+    # reflection on base img
+    rg=Image.new('RGBA',(w,h),(0,0,0,0)); rd=ImageDraw.Draw(rg)
+    rd.ellipse(((x-18)*S,(y+25)*S,(x+275)*S,(y+40)*S),fill=(76,145,184,25))
+    for k in range(5):
+        yy=y+27+k*4+math.sin(phase*2*math.pi+k*.7)*1.1
+        half=95+k*12
+        rd.line(((x+120-half)*S,yy*S,(x+120+half)*S,yy*S),fill=(80,155,197,max(10,45-k*7)),width=S)
+    img.alpha_composite(rg.filter(ImageFilter.GaussianBlur(1*S)))
+    # hull
+    d.polygon([(int(x*S),int((y+3)*S)),(int((x+255)*S),int((y+4)*S)),(int((x+234)*S),int((y+24)*S)),(int((x+20)*S),int((y+25)*S))],fill=(25,18,18,255))
+    d.polygon([(int((x+10)*S),int((y+4)*S)),(int((x+245)*S),int((y+5)*S)),(int((x+225)*S),int((y+18)*S)),(int((x+28)*S),int((y+20)*S))],fill=(116,70,42,255))
+    d.line(((x+11)*S,(y+7)*S,(x+244)*S,(y+7)*S),fill=(205,139,78,180),width=2*S)
+    # prow
+    d.line((x*S,(y+4)*S,(x-14)*S,(y-10)*S,(x-7)*S,(y-30)*S,(x+3)*S,(y-12)*S),fill=(76,49,33,255),width=3*S)
+    d.polygon([(int((x-9)*S),int((y-28)*S)),(int((x-3)*S),int((y-41)*S)),(int((x+4)*S),int((y-29)*S)),(int((x-2)*S),int((y-18)*S))],fill=(132,83,46,255))
+    # shields
+    cols=[(42,72,94),(97,58,49),(48,83,107),(108,70,44),(38,68,91)]
+    for i,xx in enumerate(range(x+21,x+230,23)):
+        c=cols[i%len(cols)]
+        d.ellipse(((xx-7)*S,(y+9)*S,(xx+7)*S,(y+23)*S),fill=(*c,255),outline=(168,118,71,255),width=2*S)
+        d.ellipse(((xx-1.5)*S,(y+15)*S,(xx+1.5)*S,(y+18)*S),fill=(190,142,86,255))
