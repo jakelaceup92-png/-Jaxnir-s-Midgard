@@ -35,3 +35,5 @@ jobs:
           git add midgard_bottom.gif
           git diff --cached --quiet || git commit -m "Render polished animated Midgard bottom scene"
           git push
+
+# 2026-08-08: force fresh Midgard render
