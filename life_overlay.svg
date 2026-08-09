@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 250" preserveAspectRatio="none">
+<defs>
+  <radialGradient id="lamp"><stop stop-color="#ffe2a0" stop-opacity=".95"/><stop offset=".25" stop-color="#ff9c42" stop-opacity=".52"/><stop offset="1" stop-color="#ff7b2b" stop-opacity="0"/></radialGradient>
+  <radialGradient id="forge"><stop stop-color="#fff0a4"/><stop offset=".28" stop-color="#ff9b39"/><stop offset=".72" stop-color="#b83b1d"/><stop offset="1" stop-color="#431413"/></radialGradient>
+  <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#745238"/><stop offset=".45" stop-color="#4d3427"/><stop offset="1" stop-color="#20191a"/></linearGradient>
+  <linearGradient id="cloak" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#6f879a"/><stop offset="1" stop-color="#263845"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="soft"><feGaussianBlur stdDeviation="2"/></filter>
+  <g id="person">
+    <ellipse cx="0" cy="6" rx="7" ry="2.2" fill="#02070b" opacity=".35"/>
+    <g>
+      <line x1="-3" y1="-1" x2="-5" y2="7" stroke="#15191d" stroke-width="2.3" stroke-linecap="round"><animate attributeName="x2" values="-6;-1;-6" dur=".72s" repeatCount="indefinite"/></line>
+      <line x1="3" y1="-1" x2="5" y2="7" stroke="#15191d" stroke-width="2.3" stroke-linecap="round"><animate attributeName="x2" values="6;1;6" dur=".72s" repeatCount="indefinite"/></line>
+    </g>
+    <path d="M-6-16Q0-19 7-16L9 0Q0 4-9 0Z" fill="url(#cloak)"/>
+    <path d="M-4-16Q0-22 4-16L3-7H-3Z" fill="#455f73"/>
+    <rect x="-8" y="-6" width="16" height="2.5" rx="1" fill="#2d241f"/>
+    <circle cx="0" cy="-22" r="4.5" fill="#bf8c6b"/>
+    <path d="M-5-22Q0-29 5-22L4-19H-5Z" fill="#31271f"/>
+    <path d="M-4-20Q0-16 4-20V-17Q0-14-4-17Z" fill="#6f4a32" opacity=".85"/>
+    <line x1="7" y1="-12" x2="10" y2="-3" stroke="#bf8c6b" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g id="shieldPerson">
+    <use href="#person"/>
+    <circle cx="-9" cy="-7" r="6" fill="#294b65" stroke="#a77c4f" stroke-width="1.2"/>
+    <circle cx="-9" cy="-7" r="2" fill="#c39b62"/>
+  </g>
+</defs>
+
+<!-- subtle shoreline haze to marry the photographic base to the animated foreground -->
+<rect x="0" y="185" width="1600" height="65" fill="#07111e" opacity=".13"/>
+<path d="M0 229Q250 218 500 229T1000 228T1600 226V250H0Z" fill="#0a1623" opacity=".20"/>
+
+<!-- left-side smithy platform -->
+<g transform="translate(755 191)">
+  <ellipse cx="70" cy="40" rx="86" ry="13" fill="#02060a" opacity=".34"/>
+  <rect x="0" y="10" width="146" height="44" rx="3" fill="#1b1717" opacity=".96"/>
+  <rect x="8" y="14" width="130" height="36" rx="2" fill="url(#wood)"/>
+  <g stroke="#a9784d" opacity=".25" stroke-width="1"><path d="M24 15v34M46 15v34M68 15v34M90 15v34M112 15v34"/></g>
+  <path d="M-10 15L72-28L157 15L136 11L105 1L72-4L39 1L12 11Z" fill="#111820"/>
+  <path d="M0 11L72-21L145 11" fill="none" stroke="#5f89a6" stroke-width="4" opacity=".6"/>
+  <rect x="14" y="28" width="43" height="21" rx="2" fill="#0f1112"/>
+  <circle cx="35" cy="38" r="28" fill="#ff7c24" opacity=".20" filter="url(#glow)"/>
+  <rect x="19" y="31" width="32" height="15" rx="2" fill="#79261c"/>
+  <rect x="23" y="34" width="24" height="10" fill="url(#forge)"/>
+  <rect x="101" y="38" width="31" height="6" rx="2" fill="#3f464a"/>
+  <rect x="112" y="44" width="8" height="10" fill="#24282b"/>
+  <circle cx="20" cy="20" r="23" fill="url(#lamp)" opacity=".34"/>
+  <line x1="20" y1="18" x2="20" y2="44" stroke="#5b412d" stroke-width="2"/>
+  <path d="M16 17L20 9L24 17Z" fill="#ffb04c"/>
+</g>
+
+<!-- working blacksmith -->
+<g transform="translate(872 224)">
+  <ellipse cx="0" cy="7" rx="9" ry="2.5" fill="#02070b" opacity=".4"/>
+  <path d="M-7-17Q0-20 7-17L9 0Q0 4-9 0Z" fill="#5b4031"/>
+  <circle cx="0" cy="-23" r="4.5" fill="#b77f5f"/>
+  <path d="M-5-23Q0-29 5-23V-20H-5Z" fill="#2c211c"/>
+  <line x1="6" y1="-12" x2="18" y2="-28" stroke="#b77f5f" stroke-width="2.5" stroke-linecap="round"><animate attributeName="x2" values="18;12;18" dur="1.25s" repeatCount="indefinite"/><animate attributeName="y2" values="-28;-9;-28" dur="1.25s" repeatCount="indefinite"/></line>
+  <rect x="14" y="-32" width="10" height="5" rx="1" fill="#4c5256"><animate attributeName="x" values="14;9;14" dur="1.25s" repeatCount="indefinite"/><animate attributeName="y" values="-32;-13;-32" dur="1.25s" repeatCount="indefinite"/></rect>
+</g>
+<g fill="#ffc05d">
+  <circle cx="891" cy="205" r="1.3"><animate attributeName="cx" values="891;904;891" dur="1.25s" repeatCount="indefinite"/><animate attributeName="cy" values="205;190;205" dur="1.25s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;0" dur="1.25s" repeatCount="indefinite"/></circle>
+  <circle cx="894" cy="206" r="1"><animate attributeName="cx" values="894;909;894" dur="1.25s" repeatCount="indefinite"/><animate attributeName="cy" values="206;196;206" dur="1.25s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.8;0" dur="1.25s" repeatCount="indefinite"/></circle>
+  <circle cx="888" cy="207" r=".9"><animate attributeName="cx" values="888;879;888" dur="1.25s" repeatCount="indefinite"/><animate attributeName="cy" values="207;195;207" dur="1.25s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.7;0" dur="1.25s" repeatCount="indefinite"/></circle>
+</g>
+
+<!-- dock, rails and lanterns -->
+<g transform="translate(1045 205)">
+  <rect x="0" y="0" width="430" height="12" rx="2" fill="#241c1b"/>
+  <rect x="0" y="0" width="430" height="3" fill="#8d6847" opacity=".9"/>
+  <g stroke="#5e4431" stroke-width="1" opacity=".45"><path d="M25 1v10M50 1v10M75 1v10M100 1v10M125 1v10M150 1v10M175 1v10M200 1v10M225 1v10M250 1v10M275 1v10M300 1v10M325 1v10M350 1v10M375 1v10M400 1v10"/></g>
+  <g fill="#141115"><rect x="18" y="9" width="7" height="32"/><rect x="105" y="9" width="7" height="32"/><rect x="200" y="9" width="7" height="32"/><rect x="295" y="9" width="7" height="32"/><rect x="392" y="9" width="7" height="32"/></g>
+  <g>
+    <circle cx="34" cy="-2" r="24" fill="url(#lamp)" opacity=".28"/>
+    <line x1="34" y1="0" x2="34" y2="-27" stroke="#6b4c32" stroke-width="2.2"/><rect x="29" y="-30" width="10" height="12" rx="2" fill="#251b17"/><rect x="31" y="-28" width="6" height="8" fill="#ffd577"/>
+  </g>
+  <g>
+    <circle cx="356" cy="-2" r="24" fill="url(#lamp)" opacity=".25"/>
+    <line x1="356" y1="0" x2="356" y2="-27" stroke="#6b4c32" stroke-width="2.2"/><rect x="351" y="-30" width="10" height="12" rx="2" fill="#251b17"/><rect x="353" y="-28" width="6" height="8" fill="#ffd577"/>
+  </g>
+</g>
+
+<!-- mooring ropes that visually connect to the hero longship layer -->
+<g fill="none" stroke="#9d8060" stroke-width="1.6" opacity=".72"><path d="M1162 206Q1151 220 1133 230"/><path d="M1344 207Q1361 220 1381 230"/></g>
+
+<!-- villagers with separate walks and small pauses implied by slow pathing -->
+<g transform="translate(320 228) scale(.92)"><use href="#person"/><animateTransform attributeName="transform" type="translate" additive="sum" values="320 228;515 228;320 228" dur="28s" repeatCount="indefinite"/></g>
+<g transform="translate(575 229) scale(.82)"><use href="#shieldPerson"/><animateTransform attributeName="transform" type="translate" additive="sum" values="575 229;430 229;575 229" dur="24s" repeatCount="indefinite"/></g>
+<g transform="translate(705 227) scale(.78)"><use href="#person"/><animateTransform attributeName="transform" type="translate" additive="sum" values="705 227;790 227;705 227" dur="19s" repeatCount="indefinite"/></g>
+<g transform="translate(1005 226) scale(.72)"><use href="#person"/><animateTransform attributeName="transform" type="translate" additive="sum" values="1005 226;930 226;1005 226" dur="17s" repeatCount="indefinite"/></g>
+<g transform="translate(1440 219) scale(.68)"><use href="#shieldPerson"/><animateTransform attributeName="transform" type="translate" additive="sum" values="1440 219;1370 219;1440 219" dur="20s" repeatCount="indefinite"/></g>
+
+<!-- drifting chimney/fjord mist -->
+<g fill="#aebfca" opacity=".18" filter="url(#soft)">
+  <circle cx="510" cy="189" r="7"><animate attributeName="cy" values="189;155" dur="8s" repeatCount="indefinite"/><animate attributeName="cx" values="510;520" dur="8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".2;0" dur="8s" repeatCount="indefinite"/></circle>
+  <circle cx="782" cy="177" r="8"><animate attributeName="cy" values="177;138" dur="9s" repeatCount="indefinite"/><animate attributeName="cx" values="782;795" dur="9s" repeatCount="indefinite"/><animate attributeName="opacity" values=".22;0" dur="9s" repeatCount="indefinite"/></circle>
+</g>
+
+<!-- sparse snow so the user's existing star field remains visible -->
+<g fill="#e5f2ff" opacity=".42"><circle r="1"><animate attributeName="cx" values="120;142" dur="12s" repeatCount="indefinite"/><animate attributeName="cy" values="32;250" dur="12s" repeatCount="indefinite"/></circle><circle r="1.1"><animate attributeName="cx" values="410;392" dur="11s" repeatCount="indefinite"/><animate attributeName="cy" values="48;250" dur="11s" repeatCount="indefinite"/></circle><circle r=".9"><animate attributeName="cx" values="690;716" dur="13s" repeatCount="indefinite"/><animate attributeName="cy" values="36;250" dur="13s" repeatCount="indefinite"/></circle><circle r="1.1"><animate attributeName="cx" values="990;967" dur="10s" repeatCount="indefinite"/><animate attributeName="cy" values="41;250" dur="10s" repeatCount="indefinite"/></circle><circle r="1"><animate attributeName="cx" values="1280;1309" dur="14s" repeatCount="indefinite"/><animate attributeName="cy" values="29;250" dur="14s" repeatCount="indefinite"/></circle></g>
+
+<!-- distant dragon: small, slow, atmospheric, deliberately not a foreground cartoon -->
+<g transform="translate(-120 58) scale(.34)" opacity=".55" fill="#06101a">
+  <path d="M-86 8Q-138 24-178 7Q-147 12-124-3Q-107-15-82-8Z"/>
+  <ellipse cx="-20" cy="0" rx="58" ry="17"/>
+  <path d="M24-5Q47-22 68-20L100-12L115-3L93 5L62 3L40 9Z"/>
+  <path d="M-46-10L-111-67L-72-18L-126-34L-61 9Z"><animateTransform attributeName="transform" type="rotate" values="-4 -46 -10;6 -46 -10;-4 -46 -10" dur="2.1s" repeatCount="indefinite"/></path>
+  <path d="M-5-12L38-69L29-18L77-41L34 10Z"><animateTransform attributeName="transform" type="rotate" values="4 -5 -12;-6 -5 -12;4 -5 -12" dur="2.1s" repeatCount="indefinite"/></path>
+  <circle cx="91" cy="-9" r="1.8" fill="#69c9ff"/>
+  <animateTransform attributeName="transform" type="translate" values="-120 58;1760 76" dur="68s" begin="16s" repeatCount="indefinite"/>
+</g>
+</svg>
