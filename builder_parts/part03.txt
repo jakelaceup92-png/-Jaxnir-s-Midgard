@@ -1,0 +1,100 @@
+y+18)*S),fill=(190,142,86,255))
+    mast=x+128
+    d.line((mast*S,(y+8)*S,mast*S,(y-63)*S),fill=(108,76,46,255),width=4*S)
+    # sail with folds
+    sail=[(mast+6,y-58),(mast+91,y-49),(mast+88,y-22),(mast+7,y-15)]
+    d.polygon([(int(a*S),int(b*S)) for a,b in sail],fill=(42,78,108,255))
+    for k in range(1,5):
+        xx=mast+7+k*16
+        d.line((xx*S,(y-55+k)*S,xx*S,(y-18-k)*S),fill=(137,176,199,55),width=S)
+    d.line(((mast+7)*S,(y-58)*S,(mast+91)*S,(y-49)*S),fill=(196,216,225,110),width=S)
+    # rigging
+    d.line((mast*S,(y-61)*S,(x+27)*S,(y+14)*S),fill=(157,124,79,185),width=S)
+    d.line((mast*S,(y-61)*S,(x+232)*S,(y+13)*S),fill=(157,124,79,185),width=S)
+    # oars
+    for ox in [42,70,190,218]:
+        ex=ox-17 if ox<128 else ox+17
+        d.line(((x+ox)*S,(y+18)*S,(x+ex)*S,(y+34)*S),fill=(135,91,53,230),width=2*S)
+    # tether ropes to dock
+    d.line(((x+15)*S,(y+9)*S,1250*S,122*S),fill=(145,111,73,190),width=S)
+    d.line(((x+239)*S,(y+8)*S,1640*S,122*S),fill=(145,111,73,190),width=S)
+    # tiny barrels
+    for bx in [x+95,x+112]:
+        d.ellipse(((bx-5)*S,(y+5)*S,(bx+5)*S,(y+13)*S),fill=(86,57,37,255),outline=(137,91,51,255),width=S)
+    # pitch
+    angle=math.sin(phase*2*math.pi+1.1)*0.45
+    rot=layer.rotate(angle,resample=Image.Resampling.BICUBIC,center=((x+128)*S,(y+8)*S))
+    img.alpha_composite(rot)
+
+def draw_dragon_hi(img,phase):
+    if not (0.70<=phase<=0.96): return
+    u=(phase-.70)/.26
+    x=-150+u*(W+300); y=38+math.sin(u*math.pi)*5
+    d=ImageDraw.Draw(img); body=(4,14,23,225); hi=(23,57,78,165)
+    sca=.55
+    d.line(((x-54*sca)*S,(y+2)*S,(x-95*sca)*S,(y+10)*S,(x-135*sca)*S,(y+3)*S),fill=body,width=max(S,int(5*S*sca)))
+    d.ellipse(((x-48*sca)*S,(y-7*sca)*S,(x+26*sca)*S,(y+11*sca)*S),fill=body)
+    d.ellipse(((x-30*sca)*S,(y-4*sca)*S,(x+15*sca)*S,(y+5*sca)*S),fill=hi)
+    d.line(((x+18*sca)*S,(y-1)*S,(x+42*sca)*S,(y-11*sca)*S),fill=body,width=max(S,int(7*S*sca)))
+    d.polygon([(int((x+35*sca)*S),int((y-15*sca)*S)),(int((x+54*sca)*S),int((y-12*sca)*S)),
+               (int((x+64*sca)*S),int((y-7*sca)*S)),(int((x+51*sca)*S),int((y-2*sca)*S)),(int((x+36*sca)*S),int((y-6*sca)*S))],fill=body)
+    d.ellipse(((x+55*sca)*S,(y-10*sca)*S,(x+58*sca)*S,(y-7*sca)*S),fill=(91,198,255,230))
+    flap=math.sin(u*math.pi*8)*8
+    lp=[(x-14*sca,y-3*sca),(x-65*sca,y-(32+flap)*sca),(x-43*sca,y-7*sca),(x-81*sca,y-(18+flap*.4)*sca),(x-35*sca,y+7*sca)]
+    rp=[(x+5*sca,y-4*sca),(x+36*sca,y-(38+flap)*sca),(x+26*sca,y-8*sca),(x+62*sca,y-(22+flap*.4)*sca),(x+28*sca,y+6*sca)]
+    d.polygon([(int(a*S),int(b*S)) for a,b in lp],fill=body)
+    d.polygon([(int(a*S),int(b*S)) for a,b in rp],fill=body)
+
+N=72
+frames=[]
+for i in range(N):
+    ph=i/N
+    fr=cozy.copy()
+    # water shimmer
+    d=ImageDraw.Draw(fr)
+    for k in range(10):
+        yy=126+k*2.2+math.sin(ph*2*math.pi+k*.55)*.8
+        x0=1180+k*39+math.sin(ph*2*math.pi+k)*13
+        d.line((x0*S,yy*S,(1880-k*20)*S,yy*S),fill=(62,143,189,35),width=S)
+    # smoke puffs
+    sm=Image.new('RGBA',(w,h),(0,0,0,0)); sd=ImageDraw.Draw(sm)
+    for j,(cx,cy) in enumerate(chim):
+        for k in range(4):
+            a=(ph+j*.12+k*.22)%1
+            sx=cx+math.sin((a+j)*5.2)*3+k*1.5
+            sy=cy-a*(24+5*k)
+            rr=2.5+5*a+k*.6
+            sd.ellipse(((sx-rr)*S,(sy-rr)*S,(sx+rr)*S,(sy+rr)*S),fill=(157,169,178,int(58*(1-a))))
+    fr.alpha_composite(sm.filter(ImageFilter.GaussianBlur(2.2*S)))
+    # campfire
+    glow(fr,800,140,26,(255,92,26),58+int(18*math.sin(ph*2*math.pi*7)),7)
+    d=ImageDraw.Draw(fr); flick=math.sin(ph*2*math.pi*7)*3.8
+    d.line((790*S,146*S,810*S,137*S),fill=(88,54,30,255),width=3*S)
+    d.line((810*S,146*S,790*S,137*S),fill=(88,54,30,255),width=3*S)
+    d.polygon([(792*S,145*S),(796*S,int((130-flick)*S)),(800*S,138*S),(804*S,int((123+flick)*S)),(809*S,145*S)],fill=(225,74,21,255))
+    d.polygon([(797*S,145*S),(801*S,int((133-flick*.25)*S)),(805*S,145*S)],fill=(255,210,91,255))
+    # blacksmith
+    bx,by=1116,142
+    d.ellipse(((bx-4)*S,(by-22)*S,(bx+4)*S,(by-14)*S),fill=(183,131,96,255))
+    d.rectangle(((bx-6)*S,(by-14)*S,(bx+6)*S,(by-3)*S),fill=(67,59,58,255))
+    hammer=math.sin(ph*2*math.pi*6)
+    hx=bx+12; hy=by-14+(8 if hammer>.1 else -5)
+    d.line(((bx+4)*S,(by-11)*S,hx*S,hy*S),fill=(183,132,99,255),width=2*S)
+    d.rectangle(((hx-4)*S,(hy-2)*S,(hx+5)*S,(hy+2)*S),fill=(63,67,71,255))
+    if hammer>.88:
+        for s in range(10):
+            ang=s*.62+ph*13; rad=4+(s%5)*2.5
+            px=1129+math.cos(ang)*rad; py=136-math.sin(ang)*rad
+            d.ellipse(((px-1)*S,(py-1)*S,(px+1)*S,(py+1)*S),fill=(255,185,68,230))
+    # villagers
+    routes=[
+        (0,430,640,142,1,(76,97,114),False),
+        (1,600,820,142,1,(111,78,61),True),
+        (2,820,1000,141,-1,(67,91,106),False),
+        (3,1000,1170,139,1,(80,79,101),False),
+        (4,1190,1510,126,1,(85,98,109),False),
+        (5,560,410,144,-1,(96,75,65),True),
+        (6,1500,1700,125,-1,(73,88,102),False),
+    ]
+    for j,x1,x2,y,dirc,coat,carry in routes:
+        q
