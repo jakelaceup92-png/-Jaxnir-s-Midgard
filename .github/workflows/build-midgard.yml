@@ -3,7 +3,7 @@ name: Build Midgard GIF
 on:
   push:
     paths:
-      - 'build_midgard.py'
+      - 'builder_parts/**'
       - '.github/workflows/build-midgard.yml'
   workflow_dispatch:
 
@@ -25,15 +25,16 @@ jobs:
       - name: Install renderer dependencies
         run: pip install pillow numpy
 
-      - name: Render Midgard GIF
-        run: python build_midgard.py
+      - name: Assemble painterly Midgard renderer
+        run: cat builder_parts/part00.txt builder_parts/part01.txt builder_parts/part02.txt builder_parts/part03.txt builder_parts/part04.txt > /tmp/build_midgard_final.py
+
+      - name: Render painterly Midgard GIF
+        run: python /tmp/build_midgard_final.py
 
       - name: Commit rendered GIF
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add midgard_bottom.gif
-          git diff --cached --quiet || git commit -m "Render polished animated Midgard bottom scene"
+          git diff --cached --quiet || git commit -m "Render luminous painterly Midgard village GIF"
           git push
-
-# 2026-08-08: force fresh Midgard render
