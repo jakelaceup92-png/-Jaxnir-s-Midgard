@@ -1,0 +1,37 @@
+name: Build Midgard GIF v2
+
+on:
+  push:
+    paths:
+      - 'build_midgard_v2.py'
+      - '.github/workflows/build-midgard-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install renderer dependencies
+        run: pip install pillow numpy
+
+      - name: Render transparent Midgard GIF
+        run: python build_midgard_v2.py
+
+      - name: Commit rendered GIF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add midgard_bottom_v2.gif
+          git diff --cached --quiet || git commit -m "Render transparent luminous Midgard GIF v2"
+          git push
