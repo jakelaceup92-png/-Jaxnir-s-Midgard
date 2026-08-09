@@ -1,0 +1,105 @@
+from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
+import numpy as np, random, math, os
+
+W,H,S=1920,150,3
+w,h=W*S,H*S
+rng=random.Random(888)
+
+def noise_tex(size, scale=40, alpha=30, seed=1):
+    rr=np.random.default_rng(seed)
+    small=rr.normal(128,35,(max(2,size[1]//scale),max(2,size[0]//scale))).clip(0,255).astype(np.uint8)
+    im=Image.fromarray(small,'L').resize(size,Image.Resampling.BICUBIC).filter(ImageFilter.GaussianBlur(scale/8))
+    out=Image.new('RGBA',size,(255,255,255,0)); out.putalpha(im.point(lambda x:int((x/255)*alpha)))
+    return out
+
+def rgba_gradient(size, top, bottom):
+    W0,H0=size
+    arr=np.zeros((H0,W0,4),dtype=np.uint8)
+    for y in range(H0):
+        t=y/max(1,H0-1)
+        col=[int(top[i]*(1-t)+bottom[i]*t) for i in range(3)]
+        arr[y,:,0]=col[0]; arr[y,:,1]=col[1]; arr[y,:,2]=col[2]; arr[y,:,3]=255
+    return Image.fromarray(arr,'RGBA')
+
+def smooth1d(arr, sigma=30):
+    radius=max(1,int(sigma*3))
+    x=np.arange(-radius,radius+1)
+    k=np.exp(-(x**2)/(2*sigma**2)); k/=k.sum()
+    pad=np.pad(arr,(radius,radius),mode='edge')
+    return np.convolve(pad,k,mode='same')[radius:-radius]
+
+def smooth_profile(seed, base_y, amp, points=20, smooth=80):
+    rr=np.random.default_rng(seed)
+    anchors=np.linspace(0,w,points)
+    vals=base_y*S + rr.normal(0,amp*S,points)
+    for k in rr.choice(np.arange(2,points-2), size=max(2,points//6), replace=False):
+        vals[k]-=rr.uniform(amp*.8,amp*1.8)*S
+    x=np.arange(w)
+    p=np.interp(x,anchors,vals)
+    return smooth1d(p,sigma=smooth)
+
+def mountain_layer(seed, base_y, amp, top_col, bot_col, blur=0, snowline=None, alpha=255):
+    profile=smooth_profile(seed,base_y,amp,points=24,smooth=55)
+    mask=np.zeros((h,w),dtype=np.uint8)
+    ys=np.clip(profile.astype(int),0,h-1)
+    for x,y in enumerate(ys):
+        mask[y:,x]=alpha
+    fill=rgba_gradient((w,h),top_col,bot_col)
+    fill.putalpha(Image.fromarray(mask,'L'))
+    if snowline:
+        snow=np.zeros((h,w),dtype=np.uint8)
+        cutoff=int(snowline*S)
+        for x,y in enumerate(ys):
+            if y<cutoff:
+                end=min(h,cutoff+4*S)
+                n=end-y
+                snow[y:end,x]=np.linspace(160,0,n).astype(np.uint8)
+        snowim=Image.new('RGBA',(w,h),(132,182,214,0)); snowim.putalpha(Image.fromarray(snow,'L'))
+        fill=Image.alpha_composite(fill,snowim)
+    if blur: fill=fill.filter(ImageFilter.GaussianBlur(blur*S))
+    return fill, profile
+
+def glow(base,x,y,r,color=(255,168,73),a=90,blur=8):
+    g=Image.new('RGBA',(w,h),(0,0,0,0)); gd=ImageDraw.Draw(g)
+    gd.ellipse(((x-r)*S,(y-r)*S,(x+r)*S,(y+r)*S),fill=(*color,a))
+    base.alpha_composite(g.filter(ImageFilter.GaussianBlur(blur*S)))
+
+def draw_house(base,x,y,Wd,Hd,roof,windows=2,style=0):
+    d=ImageDraw.Draw(base)
+    d.ellipse(((x-8)*S,(y+Hd-2)*S,(x+Wd+10)*S,(y+Hd+6)*S),fill=(0,0,0,70))
+    d.rectangle((x*S,(y+Hd-7)*S,(x+Wd)*S,(y+Hd)*S),fill=(45,43,41,255))
+    for xx in np.linspace(x+3,x+Wd-3,max(3,int(Wd/9))):
+        d.line((xx*S,(y+Hd-7)*S,xx*S,(y+Hd)*S),fill=(87,88,87,90),width=S)
+    wall=[(70,44,31),(83,50,31),(60,43,35)][style%3]
+    d.rounded_rectangle((x*S,y*S,(x+Wd)*S,(y+Hd-5)*S),radius=2*S,fill=(*wall,255))
+    for yy in np.arange(y+4,y+Hd-7,4.5):
+        d.line(((x+2)*S,yy*S,(x+Wd-2)*S,yy*S),fill=(154,99,54,55),width=S)
+    beam=(35,24,21,220)
+    for xx in [x+6,x+Wd/2,x+Wd-6]:
+        d.line((xx*S,y*S,xx*S,(y+Hd-6)*S),fill=beam,width=2*S)
+    d.line((x*S,(y+Hd*.52)*S,(x+Wd)*S,(y+Hd*.52)*S),fill=beam,width=2*S)
+    roofpts=[(x-10,y+2),(x+Wd*.5,y-roof),(x+Wd+10,y+2)]
+    d.polygon([(int(a*S),int(b*S)) for a,b in roofpts],fill=(10,17,23,255))
+    for frac in np.linspace(.15,.85,6):
+        yy=(y-roof)+(roof*frac); half=(Wd/2+8)*frac
+        d.line(((x+Wd/2-half)*S,yy*S,(x+Wd/2+half)*S,yy*S),fill=(62,67,67,80),width=S)
+    snowpts=[(x-7,y),(x+Wd*.12,y-roof*.25+1),(x+Wd*.28,y-roof*.52-1),(x+Wd*.5,y-roof+3),
+             (x+Wd*.72,y-roof*.52+1),(x+Wd*.88,y-roof*.25),(x+Wd+7,y)]
+    d.line([(int(a*S),int(b*S)) for a,b in snowpts],fill=(190,222,238,230),width=3*S)
+    d.line(((x-5)*S,(y+2)*S,(x+Wd+5)*S,(y+2)*S),fill=(112,158,184,120),width=S)
+    for i in range(windows):
+        wx=x+Wd*(i+1)/(windows+1); wy=y+Hd*.48
+        glow(base,wx,wy,13,(255,153,54),90,6)
+        d=ImageDraw.Draw(base)
+        d.rectangle(((wx-5)*S,(wy-4)*S,(wx+5)*S,(wy+5)*S),fill=(79,43,26,255))
+        d.rectangle(((wx-3.5)*S,(wy-2.5)*S,(wx+3.5)*S,(wy+3.5)*S),fill=(255,214,127,255))
+        d.line((wx*S,(wy-3)*S,wx*S,(wy+4)*S),fill=(126,73,39,255),width=S)
+        d.line(((wx-4)*S,wy*S,(wx+4)*S,wy*S),fill=(126,73,39,255),width=S)
+        light=Image.new('RGBA',(w,h),(0,0,0,0)); ld=ImageDraw.Draw(light)
+        ld.polygon([(int((wx-8)*S),int((y+Hd)*S)),(int((wx+8)*S),int((y+Hd)*S)),
+                    (int((wx+18)*S),int((y+Hd+10)*S)),(int((wx-18)*S),int((y+Hd+10)*S))],fill=(255,175,77,28))
+        base.alpha_composite(light.filter(ImageFilter.GaussianBlur(3*S)))
+    d=ImageDraw.Draw(base)
+    dw=max(8,Wd*.12)
+    d.rectangle(((x+Wd/2-dw/2)*S,(y+Hd-19)*S,(x+Wd/2+dw/2)*S,(y+Hd)*S),fill=(30,20,18,255))
+    d
