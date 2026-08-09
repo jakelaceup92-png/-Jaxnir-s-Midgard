@@ -1,0 +1,106 @@
+.rectangle(((x+Wd/2-dw/2)*S,(y+Hd-19)*S,(x+Wd/2+dw/2)*S,(y+Hd)*S),fill=(30,20,18,255))
+    d.rectangle(((x+Wd/2-dw/2+2)*S,(y+Hd-17)*S,(x+Wd/2+dw/2-2)*S,(y+Hd)*S),fill=(94,56,34,255))
+    cx=x+Wd*.78
+    d.rectangle((cx*S,(y-roof+4)*S,(cx+6)*S,(y+2)*S),fill=(45,31,27,255))
+    return cx+3,y-roof+4
+
+def tree(base,x,y,scale=1,far=False):
+    d=ImageDraw.Draw(base)
+    col=(6,17,25,255) if not far else (15,34,43,210)
+    d.rectangle(((x-1)*S,(y-15*scale)*S,(x+1)*S,(y+2)*S),fill=(38,28,22,220))
+    for i in range(7):
+        yy=y-(52-i*7)*scale; ww=(7+i*4)*scale; asym=rng.uniform(.8,1.15)
+        p=[(x,yy-5*scale),(x-ww*asym,yy+10*scale),(x-ww*.45,yy+8*scale),
+           (x+ww*.35,yy+9*scale),(x+ww/asym,yy+11*scale)]
+        d.polygon([(int(a*S),int(b*S)) for a,b in p],fill=col)
+        if not far and i>1:
+            d.line(((x-ww*.55)*S,(yy+7)*S,(x+ww*.45)*S,(yy+7)*S),fill=(102,156,187,80),width=S)
+
+base=rgba_gradient((w,h),(2,8,20),(7,29,53))
+d=ImageDraw.Draw(base)
+for _ in range(430):
+    sx=rng.randrange(w); sy=rng.randrange(int(60*S)); r=rng.choice([1,1,1,2,2,3])
+    d.ellipse((sx-r,sy-r,sx+r,sy+r),fill=(120,186,250,rng.randrange(70,190)))
+glow(base,960,28,650,(30,92,200),24,50)
+
+for args in [
+    (10,83,18,(27,53,89),(11,27,49),1.2,54,235),
+    (20,101,16,(17,42,68),(7,23,39),.4,73,250),
+    (30,118,11,(11,30,47),(5,18,31),0,95,255)
+]:
+    ml,_=mountain_layer(*args)
+    base.alpha_composite(ml)
+
+haze=Image.new('RGBA',(w,h),(0,0,0,0)); hd=ImageDraw.Draw(haze)
+hd.rectangle((0,70*S,w,110*S),fill=(50,108,168,20))
+base.alpha_composite(haze.filter(ImageFilter.GaussianBlur(15*S)))
+
+d=ImageDraw.Draw(base)
+groundprof=smooth_profile(55,129,5,points=34,smooth=35)
+ground=[(x/S,groundprof[x]/S) for x in range(0,w,30*S)]+[(W,H),(0,H)]
+d.polygon([(int(a*S),int(b*S)) for a,b in ground],fill=(170,207,229,255))
+fgprof=smooth_profile(61,143,3,points=30,smooth=30)
+fg=[(x/S,fgprof[x]/S) for x in range(0,w,30*S)]+[(W,H),(0,H)]
+d.polygon([(int(a*S),int(b*S)) for a,b in fg],fill=(85,126,155,255))
+
+water_start=1160
+d.polygon([(water_start*S,126*S),(1260*S,121*S),(1410*S,123*S),(1570*S,118*S),(1730*S,121*S),(W*S,117*S),(W*S,H*S),(water_start*S,H*S)],fill=(3,17,31,255))
+for yy in range(126,150):
+    t=(yy-126)/24
+    c=tuple(int((7,43,70)[i]*(1-t)+(3,17,31)[i]*t) for i in range(3))
+    d.line((water_start*S,yy*S,W*S,yy*S),fill=(*c,255),width=S)
+
+for xg,rg in [(550,80),(780,120),(1030,75)]:
+    glow(base,xg,120,rg,(255,134,44),24,18)
+
+for x in list(range(10,380,30))+list(range(1580,1910,28)): tree(base,x,138,rng.uniform(.5,.8),far=True)
+for x in [20,62,112,165,225,292,355,1515,1575,1640,1710,1780,1850,1905]: tree(base,x,145,rng.uniform(.72,1.05),far=False)
+
+chim=[]
+for args in [(420,108,92,31,19,2,0),(520,115,70,25,15,1,1),(610,100,116,38,23,2,0),
+             (748,89,214,49,32,4,1),(985,106,98,30,19,2,2),(1095,114,78,25,15,1,0)]:
+    chim.append(draw_house(base,*args))
+
+d=ImageDraw.Draw(base)
+d.rectangle((1015*S,119*S,1110*S,147*S),fill=(45,29,24,255))
+d.polygon([(1008*S,120*S),(1062*S,92*S),(1117*S,120*S)],fill=(10,18,25,255))
+d.line((1011*S,118*S,1062*S,96*S,1114*S,118*S),fill=(177,206,222,150),width=3*S)
+glow(base,1040,134,28,(255,92,26),90,7)
+d=ImageDraw.Draw(base)
+d.rectangle((1020*S,126*S,1058*S,145*S),fill=(21,17,17,255))
+d.rectangle((1025*S,130*S,1053*S,141*S),fill=(155,47,21,255))
+d.rectangle((1031*S,132*S,1047*S,139*S),fill=(255,112,29,255))
+d.rectangle((1073*S,134*S,1100*S,139*S),fill=(67,71,75,255))
+d.rectangle((1080*S,139*S,1092*S,149*S),fill=(47,50,54,255))
+
+d.rectangle((1200*S,119*S,1725*S,125*S),fill=(61,40,29,255))
+d.rectangle((1200*S,119*S,1725*S,121*S),fill=(143,91,50,255))
+for xx in range(1218,1725,62): d.rectangle((xx*S,124*S,(xx+7)*S,150*S),fill=(28,22,20,255))
+for xx in [1230,1410,1590,1700]:
+    d.rectangle((xx*S,101*S,(xx+3)*S,119*S),fill=(77,52,34,255))
+    glow(base,xx+1,101,14,(255,181,79),75,6)
+    d=ImageDraw.Draw(base)
+    d.rectangle(((xx-2)*S,97*S,(xx+5)*S,104*S),fill=(34,28,25,255))
+    d.rectangle((xx*S,99*S,(xx+3)*S,102*S),fill=(255,197,101,255))
+
+d.line((290*S,137*S,380*S,132*S),fill=(76,52,36,255),width=4*S)
+d.line((296*S,132*S,374*S,128*S),fill=(102,69,43,220),width=2*S)
+for xx in range(300,376,14): d.line((xx*S,128*S,xx*S,140*S),fill=(55,40,31,220),width=S)
+
+tex=noise_tex((w,h),scale=60,alpha=18,seed=7)
+base.alpha_composite(tex)
+
+preview=base.resize((W,H),Image.Resampling.LANCZOS)
+preview.save('kinkade_base_preview.png')
+print("ok")
+
+# Add more static cozy detail to the existing high-res base before animation.
+cozy=base.copy()
+d=ImageDraw.Draw(cozy)
+
+# Tiny distant cottages tucked between village buildings for depth
+for x,y,wd,hd in [(390,121,42,15),(580,119,38,14),(705,116,45,17),(930,119,36,14),(1140,120,33,13)]:
+    d.rectangle((x*S,y*S,(x+wd)*S,(y+hd)*S),fill=(55,40,32,230))
+    d.polygon([(int((x-4)*S),int(y*S)),(int((x+wd/2)*S),int((y-11)*S)),(int((x+wd+4)*S),int(y*S))],fill=(10,18,25,240))
+    d.line(((x-2)*S,y*S,(x+wd/2)*S,(y-9)*S,(x+wd+2)*S,y*S),fill=(153,192,213,130),width=2*S)
+    
