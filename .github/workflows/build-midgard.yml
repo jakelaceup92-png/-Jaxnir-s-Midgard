@@ -3,7 +3,7 @@ name: Build Midgard GIF
 on:
   push:
     paths:
-      - 'builder_parts/**'
+      - 'build_midgard.py'
       - '.github/workflows/build-midgard.yml'
   workflow_dispatch:
 
@@ -25,11 +25,8 @@ jobs:
       - name: Install renderer dependencies
         run: pip install pillow numpy
 
-      - name: Assemble painterly Midgard renderer
-        run: cat builder_parts/part00.txt builder_parts/part01.txt builder_parts/part02.txt builder_parts/part03.txt builder_parts/part04.txt > /tmp/build_midgard_final.py
-
-      - name: Render painterly Midgard GIF
-        run: python /tmp/build_midgard_final.py
+      - name: Render luminous Midgard GIF
+        run: python build_midgard.py
 
       - name: Commit rendered GIF
         run: |
