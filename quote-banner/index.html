@@ -57,14 +57,12 @@
 
     .banner {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      right: auto;
-      width: min(88vw, 108vh);
-      height: clamp(220px, 34vh, 620px);
-      max-width: 96%;
-      max-height: 96%;
-      transform: translate(-50%, -50%);
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      transform: none;
       display: grid;
       place-items: center;
       isolation: isolate;
@@ -557,11 +555,17 @@
       }
     }
 
-    @media (max-height: 420px) {
-      .banner {
-        width: min(96vw, 340vh);
-        height: 100%;
-        max-height: 100%;
+    @media (max-width: 640px), (max-height: 420px) {
+      .quote-cell {
+        padding: clamp(12px, 4vmin, 22px) clamp(14px, 4vw, 22px);
+      }
+
+      .message-headline {
+        letter-spacing: 0.055em;
+      }
+
+      .message-detail {
+        letter-spacing: 0.06em;
       }
     }
 
@@ -1104,7 +1108,7 @@
 
       const minimum = 10;
       let low = minimum;
-      let high = Math.max(minimum, Math.min(150, quoteCell.clientHeight * 0.62, quoteCell.clientWidth / 11));
+      let high = Math.max(minimum, Math.min(180, quoteCell.clientHeight * 0.52, quoteCell.clientWidth / 6.5));
       let best = minimum;
 
       for (let pass = 0; pass < 11; pass += 1) {
@@ -1129,12 +1133,23 @@
       quoteElement.style.fontSize = `${best}px`;
       quoteElement.style.letterSpacing = `${letterSpacingFor(best)}px`;
 
-      // One final measurement after applying the winning size prevents a
-      // wider fallback letter-spacing value from clipping the last glyph.
-      if (quoteElement.scrollWidth > quoteCell.clientWidth || quoteElement.scrollHeight > quoteCell.clientHeight) {
-        const corrected = Math.max(minimum, best - 1);
+      // Recheck the rendered glyphs themselves. Decorative fonts can extend a
+      // few pixels beyond their nominal line box, so step down until every
+      // message is safely inside the 504x284 Meld source.
+      let corrected = best;
+      let guard = 0;
+      while (
+        guard < 12
+        && corrected > minimum
+        && (
+          quoteElement.scrollWidth > quoteCell.clientWidth - 2
+          || quoteElement.scrollHeight > quoteCell.clientHeight - 4
+        )
+      ) {
+        corrected = Math.max(minimum, corrected - 1);
         quoteElement.style.fontSize = `${corrected}px`;
         quoteElement.style.letterSpacing = `${letterSpacingFor(corrected)}px`;
+        guard += 1;
       }
     }
 
