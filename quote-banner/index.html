@@ -352,38 +352,15 @@
       text-transform: uppercase;
     }
 
-    .message-emoji {
-      display: inline-block;
-      margin-right: 0.4em;
-      color: initial;
-      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
-      font-size: 0.72em;
-      font-style: normal;
-      font-variant: normal;
-      font-weight: 400;
-      line-height: 1;
-      vertical-align: 0.08em;
-      text-shadow: none;
-      filter:
-        drop-shadow(0 0 3px rgba(212, 246, 255, 0.9))
-        drop-shadow(0 0 8px rgba(49, 179, 255, 0.6));
-      animation: emoji-float 3.6s ease-in-out infinite;
-    }
-
     .quote:not(.is-promo) {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.28em;
-    }
-
-    .quote:not(.is-promo) .message-emoji {
-      flex: 0 0 auto;
-      margin-right: 0;
     }
 
     .message-copy {
       display: inline-flex;
+      width: max-content;
       min-width: 0;
       max-width: 100%;
       flex-direction: column;
@@ -418,7 +395,7 @@
 
     .message-stack {
       display: inline-flex;
-      width: min(92%, 440px);
+      width: max-content;
       min-width: 0;
       max-width: 100%;
       flex-direction: column;
@@ -436,8 +413,7 @@
       line-height: 1.02;
       letter-spacing: 0.09em;
       max-width: 100%;
-      white-space: normal;
-      text-wrap: balance;
+      white-space: nowrap;
     }
 
     .message-detail {
@@ -450,10 +426,14 @@
       letter-spacing: 0.1em;
       max-width: 100%;
       white-space: normal;
-      text-wrap: balance;
       text-shadow:
         0 1px 1px rgba(0, 0, 0, 0.94),
         0 0 8px rgba(50, 177, 255, 0.38);
+    }
+
+    .promo-line {
+      display: block;
+      white-space: nowrap;
     }
 
     .quote.is-exiting {
@@ -710,6 +690,10 @@
       left: 0;
       width: 504px;
       height: 284px;
+    }
+
+    html.meld-preview .quote-cell {
+      padding: 22px 30px;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1141,46 +1125,14 @@
     }
 
 
-    const emojiRules = [
-      { pattern: /\bclimb\b|\bmountain\b|\bsummit\b/i, emoji: "🏔️" },
-      { pattern: /\bstorms?\b/i, emoji: "⛈️" },
-      { pattern: /\bdarkest\b|\bnight\b/i, emoji: "🌙" },
-      { pattern: /\bsunrise\b|\bdawn\b|\blight tomorrow\b/i, emoji: "🌅" },
-      { pattern: /\bjourney\b|\bdirection\b|\bwherever\b|\bway out\b|\broad\b|\bpath\b|\bwalking\b/i, emoji: "🧭" },
-      { pattern: /\bstep\b|\bpace\b|\bforward\b|\bmoving\b|\bprogress\b/i, emoji: "🥾" },
-      { pattern: /\bgrowth\b|\bgrow\b|\broots?\b/i, emoji: "🌱" },
-      { pattern: /\bstory\b|\bchapter\b|\bpast teach\b/i, emoji: "📖" },
-      { pattern: /\bkindness\b|\bhappiness\b|\bpeace\b|\bheart\b/i, emoji: "💙" },
-      { pattern: /\bcourage\b|\bbold\b|\bfear\b|\bconflict\b|\bstrong\b|\bstrength\b|\bfight\b/i, emoji: "🛡️" },
-      { pattern: /\btriumph\b|\bvictory\b|\bsuccess\b|\bbreakthrough\b|\bcomeback\b|\bwins?\b/i, emoji: "🏆" },
-      { pattern: /\bbuild\b|\bforge\b|\bforging\b|\bwork\b|\beffort\b|\baction\b|\bdiscipline\b|\bhabits?\b|\bconsistency\b|\bresults?\b/i, emoji: "⚒️" },
-      { pattern: /\bhope\b|\bdream\b|\bpotential\b|\bpossibility\b/i, emoji: "✨" },
-      { pattern: /\bpatience\b|\buncertainty\b|\bprocess\b/i, emoji: "⏳" },
-      { pattern: /\bbegin\b|\bstart\b|\breset\b|\banother chance\b|\bbegin again\b/i, emoji: "🔄" },
-      { pattern: /\bfuture\b|\btomorrow\b/i, emoji: "🔮" },
-      { pattern: /\bpressure\b|\bobstacle\b|\bhard days?\b|\bsetback\b|\bstruggle\b/i, emoji: "🔥" },
-      { pattern: /\bshowing up\b|\bshow up\b|\bkeep going\b|\brefusing to quit\b|\bdo not quit\b/i, emoji: "⚔️" },
-      { pattern: /\bPrime\b/i, emoji: "👑" },
-      { pattern: /\bExtra Life\b|\bTWITCH\b/i, emoji: "🎮" },
-      { pattern: /\bYOUTUBE\b/i, emoji: "▶️" },
-      { pattern: /\bTIKTOK\b/i, emoji: "🎵" },
-      { pattern: /\bDISCORD\b/i, emoji: "💬" },
-      { pattern: /\bfollow\b/i, emoji: "👣" },
-      { pattern: /\bthank\b/i, emoji: "🙏" },
-      { pattern: /\bsupport\b|\bcommunity\b/i, emoji: "🤝" }
-    ];
-
-    function emojiForMessage(message) {
-      const match = emojiRules.find((rule) => rule.pattern.test(message));
-      return match ? match.emoji : "✨";
-    }
+    // Text-only presentation: no emoji decorations.
 
     let fontTurn = 0;
 
-    function splitLongMessage(message) {
+    function splitLongMessage(message, oneLineLimit = 28, twoLineLimit = 56) {
       const text = message.trim();
       const words = text.split(/\s+/);
-      const desiredLines = text.length <= 28 ? 1 : (text.length <= 56 ? 2 : 3);
+      const desiredLines = text.length <= oneLineLimit ? 1 : (text.length <= twoLineLimit ? 2 : 3);
 
       if (desiredLines === 1 || words.length < desiredLines * 2) {
         return [text];
@@ -1254,11 +1206,6 @@
       fontTurn += 1;
       quoteElement.textContent = "";
 
-      const emoji = document.createElement("span");
-      emoji.className = "message-emoji";
-      emoji.setAttribute("aria-hidden", "true");
-      emoji.textContent = emojiForMessage(message);
-
       const parts = message.split("|");
       const isPromo = parts.length === 2;
       quoteElement.classList.toggle("is-promo", isPromo);
@@ -1269,14 +1216,19 @@
 
         const headline = document.createElement("span");
         headline.className = "message-headline";
-        headline.textContent = parts[0];
+        headline.textContent = parts[0].trim();
 
         const detail = document.createElement("span");
         detail.className = "message-detail";
-        detail.textContent = parts[1];
+        splitLongMessage(parts[1].trim(), 24, 48).forEach((lineText) => {
+          const line = document.createElement("span");
+          line.className = "promo-line";
+          line.textContent = lineText;
+          detail.append(line);
+        });
 
         stack.append(headline, detail);
-        quoteElement.append(emoji, stack);
+        quoteElement.append(stack);
         return;
       }
 
@@ -1291,7 +1243,7 @@
         copy.append(line);
       });
 
-      quoteElement.append(emoji, copy);
+      quoteElement.append(copy);
     }
 
     let quoteDeck = [];
@@ -1370,6 +1322,29 @@
       return Math.max(0.55, size * 0.075);
     }
 
+    function contentMetrics() {
+      const content = quoteElement.querySelector(
+        quoteElement.classList.contains("is-promo") ? ".message-stack" : ".message-copy"
+      );
+      if (!content) {
+        return { width: 0, height: 0, content: null };
+      }
+      return {
+        width: Math.ceil(content.scrollWidth),
+        height: Math.ceil(content.scrollHeight),
+        content
+      };
+    }
+
+    function availableTextSpace() {
+      const styles = getComputedStyle(quoteCell);
+      const verticalPadding = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+      return {
+        width: Math.max(0, quoteElement.clientWidth),
+        height: Math.max(0, quoteCell.clientHeight - verticalPadding)
+      };
+    }
+
     function fitText() {
       if (!quoteElement.textContent || quoteCell.clientWidth === 0 || quoteCell.clientHeight === 0) {
         return;
@@ -1377,28 +1352,20 @@
 
       const isPromo = quoteElement.classList.contains("is-promo");
       const minimum = isPromo ? 24 : 20;
-      const maximumLines = isPromo ? 6 : 3;
+      const space = availableTextSpace();
+      const targetWidth = space.width * 0.96;
+      const targetHeight = space.height * (isPromo ? 0.82 : 0.78);
       let low = minimum;
-      let high = Math.max(
-        minimum,
-        Math.min(
-          180,
-          quoteCell.clientHeight * (isPromo ? 0.34 : 0.46),
-          quoteCell.clientWidth / (isPromo ? 6.2 : 6.8)
-        )
-      );
+      let high = isPromo ? 104 : 118;
       let best = minimum;
 
-      for (let pass = 0; pass < 11; pass += 1) {
+      for (let pass = 0; pass < 12; pass += 1) {
         const size = (low + high) / 2;
         quoteElement.style.fontSize = `${size}px`;
         quoteElement.style.letterSpacing = `${letterSpacingFor(size)}px`;
 
-        const lineHeight = size * 1.1;
-        const lineCount = Math.ceil(quoteElement.scrollHeight / lineHeight - 0.02);
-        const fits = quoteElement.scrollHeight <= quoteCell.clientHeight - 4
-          && quoteElement.scrollWidth <= quoteCell.clientWidth
-          && lineCount <= maximumLines;
+        const metrics = contentMetrics();
+        const fits = metrics.width <= targetWidth && metrics.height <= targetHeight;
 
         if (fits) {
           best = size;
@@ -1411,22 +1378,18 @@
       quoteElement.style.fontSize = `${best}px`;
       quoteElement.style.letterSpacing = `${letterSpacingFor(best)}px`;
 
-      // Recheck the rendered glyphs themselves. Decorative fonts can extend a
-      // few pixels beyond their nominal line box, so step down until every
-      // message is safely inside the 504x284 Meld source.
       let corrected = best;
       let guard = 0;
+      let metrics = contentMetrics();
       while (
-        guard < 12
+        guard < 20
         && corrected > minimum
-        && (
-          quoteElement.scrollWidth > quoteCell.clientWidth - 2
-          || quoteElement.scrollHeight > quoteCell.clientHeight - 4
-        )
+        && (metrics.width > targetWidth || metrics.height > targetHeight)
       ) {
-        corrected = Math.max(minimum, corrected - 1);
+        corrected = Math.max(minimum, corrected - 0.75);
         quoteElement.style.fontSize = `${corrected}px`;
         quoteElement.style.letterSpacing = `${letterSpacingFor(corrected)}px`;
+        metrics = contentMetrics();
         guard += 1;
       }
     }
@@ -1507,65 +1470,72 @@
 
     function runLayoutAudit() {
       const auditMessages = [...quotes, ...supportMessages, ...socialMessages];
+      const reports = [];
       const failures = [];
-      const unsplitLong = [];
-      let splitQuoteCount = 0;
       let smallestFont = Number.POSITIVE_INFINITY;
-      let auditIndex = 0;
 
-      function auditStep() {
-        if (auditIndex >= auditMessages.length) {
-          document.documentElement.dataset.auditComplete = "true";
-          document.documentElement.dataset.auditFailures = JSON.stringify(failures);
-          document.documentElement.dataset.auditUnsplit = JSON.stringify(unsplitLong);
-          document.documentElement.dataset.auditSplitCount = String(splitQuoteCount);
-          document.documentElement.dataset.auditSmallestFont = String(smallestFont);
-          return;
-        }
+      auditMessages.forEach((message, messageIndex) => {
+        [0, 1].forEach((fontStyle) => {
+          fontTurn = fontStyle;
+          currentMessage = message;
+          renderMessage(message);
+          quoteElement.classList.remove("is-exiting", "is-entering");
+          fitText();
 
-        const message = auditMessages[auditIndex];
-        auditIndex += 1;
-        currentMessage = message;
-        renderMessage(message);
-        quoteElement.classList.remove("is-exiting", "is-entering");
-        fitText();
-
-        requestAnimationFrame(() => {
-          const copy = quoteElement.querySelector(".message-copy");
           const isPromo = quoteElement.classList.contains("is-promo");
-          const lineCount = copy ? copy.querySelectorAll(".message-line").length : 2;
-          const fitsX = quoteElement.scrollWidth <= quoteCell.clientWidth - 2;
-          const fitsY = quoteElement.scrollHeight <= quoteCell.clientHeight - 4;
+          const metrics = contentMetrics();
+          const space = availableTextSpace();
+          const quoteRect = quoteElement.getBoundingClientRect();
+          const contentRect = metrics.content.getBoundingClientRect();
           const fontSize = Number.parseFloat(getComputedStyle(quoteElement).fontSize);
+          const lineCount = isPromo
+            ? 1 + quoteElement.querySelectorAll(".promo-line").length
+            : quoteElement.querySelectorAll(".message-line").length;
+          const leftSafe = contentRect.left - quoteRect.left;
+          const rightSafe = quoteRect.right - contentRect.right;
+          const topSafe = contentRect.top - quoteCell.getBoundingClientRect().top;
+          const bottomSafe = quoteCell.getBoundingClientRect().bottom - contentRect.bottom;
+          const widthFill = metrics.width / space.width;
+          const heightFill = metrics.height / space.height;
+          const clipped = leftSafe < -1 || rightSafe < -1 || topSafe < -1 || bottomSafe < -1;
 
           smallestFont = Math.min(smallestFont, fontSize);
 
-          if (!isPromo && lineCount === 2) {
-            splitQuoteCount += 1;
-          }
+          const report = {
+            messageIndex,
+            message,
+            font: fontStyle === 0 ? "fire" : "dragon",
+            isPromo,
+            fontSize: Number(fontSize.toFixed(2)),
+            lineCount,
+            width: metrics.width,
+            height: metrics.height,
+            widthFill: Number(widthFill.toFixed(3)),
+            heightFill: Number(heightFill.toFixed(3)),
+            leftSafe: Number(leftSafe.toFixed(1)),
+            rightSafe: Number(rightSafe.toFixed(1)),
+            topSafe: Number(topSafe.toFixed(1)),
+            bottomSafe: Number(bottomSafe.toFixed(1)),
+            clipped
+          };
+          reports.push(report);
 
-          if (!fitsX || !fitsY) {
-            failures.push({
-              message,
-              fitsX,
-              fitsY,
-              scrollWidth: quoteElement.scrollWidth,
-              scrollHeight: quoteElement.scrollHeight,
-              cellWidth: quoteCell.clientWidth,
-              cellHeight: quoteCell.clientHeight
-            });
+          if (
+            clipped
+            || metrics.width > space.width * 0.965
+            || metrics.height > space.height * (isPromo ? 0.825 : 0.785)
+            || fontSize < (isPromo ? 23.9 : 19.9)
+          ) {
+            failures.push(report);
           }
-
-          if (!isPromo && message.length > 28 && lineCount < 2) {
-            unsplitLong.push(message);
-          }
-
-          document.documentElement.dataset.auditProgress = String(auditIndex);
-          window.setTimeout(auditStep, 0);
         });
-      }
+      });
 
-      auditStep();
+      document.documentElement.dataset.auditComplete = "true";
+      document.documentElement.dataset.auditProgress = String(reports.length);
+      document.documentElement.dataset.auditFailures = JSON.stringify(failures);
+      document.documentElement.dataset.auditSmallestFont = String(smallestFont);
+      document.documentElement.dataset.auditReport = JSON.stringify(reports);
     }
 
     if (query.has("audit")) {
