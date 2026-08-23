@@ -301,6 +301,8 @@
 
     .quote {
       width: 100%;
+      min-width: 0;
+      max-width: 100%;
       max-height: 100%;
       margin: 0;
       color: #f4fbff;
@@ -1129,7 +1131,7 @@
 
     let fontTurn = 0;
 
-    function splitLongMessage(message, oneLineLimit = 28, twoLineLimit = 56) {
+    function splitLongMessage(message, oneLineLimit = 0, twoLineLimit = 44) {
       const text = message.trim();
       const words = text.split(/\s+/);
       const desiredLines = text.length <= oneLineLimit ? 1 : (text.length <= twoLineLimit ? 2 : 3);
