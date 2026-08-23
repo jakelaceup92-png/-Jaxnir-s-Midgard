@@ -111,7 +111,7 @@
 
     .rune-field {
       position: absolute;
-      inset: 7% 12%;
+      inset: 2% 4%;
       z-index: 0;
       display: grid;
       place-items: center;
@@ -132,11 +132,11 @@
     }
 
     .rune-mark {
-      height: 105%;
-      width: min(28%, 360px);
-      min-width: 105px;
+      height: 110%;
+      width: min(52%, 520px);
+      min-width: 180px;
       overflow: visible;
-      opacity: 0.28;
+      opacity: 0.32;
       filter:
         drop-shadow(0 0 4px rgba(84, 199, 255, 0.92))
         drop-shadow(0 0 13px rgba(23, 145, 234, 0.82))
@@ -156,6 +156,12 @@
 
     .rune-core {
       stroke-width: 8 !important;
+    }
+
+    .rune-active {
+      transform-box: fill-box;
+      transform-origin: center;
+      transform: scale(1.08);
     }
 
     .traditional-glyph {
@@ -575,7 +581,7 @@
       }
 
       .rune-mark {
-        width: min(38%, 300px);
+        width: min(68%, 380px);
       }
     }
 
