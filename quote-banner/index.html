@@ -1339,7 +1339,7 @@
     let quotesSinceCallout = 0;
     let currentMessage = "";
     let timerId = null;
-    let resizeFrame = null;
+    let resizePending = false;
 
     function shuffle(source) {
       const output = [...source];
@@ -1517,29 +1517,26 @@
     }
 
     function requestFit() {
-      if (resizeFrame !== null) {
-        cancelAnimationFrame(resizeFrame);
+      if (resizePending) {
+        return;
       }
-      resizeFrame = requestAnimationFrame(() => {
-        resizeFrame = null;
+      resizePending = true;
+      Promise.resolve().then(() => {
+        resizePending = false;
         fitText();
       });
-    }
-
-    function settleEntry() {
-      quoteElement.classList.remove("is-entering");
-      schedule(beginExit, DISPLAY_MS);
     }
 
     function replaceMessage() {
       currentMessage = nextMessage();
       renderMessage(currentMessage);
-      requestAnimationFrame(() => runeField.classList.remove("is-changing"));
+      runeField.classList.remove("is-changing");
       quoteElement.classList.remove("is-exiting");
       quoteElement.classList.add("is-entering");
       fitText();
       void quoteElement.offsetWidth;
-      requestAnimationFrame(settleEntry);
+      quoteElement.classList.remove("is-entering");
+      schedule(beginExit, DISPLAY_MS);
     }
 
     function beginExit() {
