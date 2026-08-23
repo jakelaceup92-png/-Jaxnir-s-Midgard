@@ -408,7 +408,9 @@
     }
 
     .message-headline {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       color: #f4fbff;
       font-size: 1.24em;
       font-weight: 700;
@@ -433,6 +435,7 @@
         0 0 8px rgba(50, 177, 255, 0.38);
     }
 
+    .headline-line,
     .promo-line {
       display: block;
       white-space: nowrap;
@@ -1131,12 +1134,13 @@
 
     let fontTurn = 0;
 
-    function splitLongMessage(message, oneLineLimit = 0, twoLineLimit = 44) {
+    function balanceMessage(message, requestedLines) {
       const text = message.trim();
       const words = text.split(/\s+/);
-      const desiredLines = text.length <= oneLineLimit ? 1 : (text.length <= twoLineLimit ? 2 : 3);
+      const maximumBalancedLines = Math.max(1, Math.floor(words.length / 2));
+      const desiredLines = Math.max(1, Math.min(requestedLines, maximumBalancedLines));
 
-      if (desiredLines === 1 || words.length < desiredLines * 2) {
+      if (desiredLines === 1) {
         return [text];
       }
 
@@ -1172,11 +1176,11 @@
         const longest = Math.max(...lengths);
         const shortest = Math.min(...lengths);
         let score = lengths.reduce((sum, length) => sum + Math.pow(length - target, 2), 0);
-        score += Math.pow(longest - shortest, 2) * 0.8;
+        score += Math.pow(longest - shortest, 2) * 0.9;
 
         breaks.forEach((breakIndex) => {
           if (/[,:;.!?]$/.test(words[breakIndex - 1])) {
-            score -= 24;
+            score -= 28;
           }
         });
 
@@ -1201,6 +1205,84 @@
       return bestLines;
     }
 
+    function splitLongMessage(message, oneLineLimit = 0, twoLineLimit = 44) {
+      const text = message.trim();
+      const requestedLines = text.length <= oneLineLimit ? 1 : (text.length <= twoLineLimit ? 2 : 3);
+      return balanceMessage(text, requestedLines);
+    }
+
+    function normalLineCandidates(message) {
+      const wordCount = message.trim().split(/\s+/).length;
+      const maximum = Math.min(3, Math.max(1, Math.floor(wordCount / 2)));
+      if (maximum === 1) {
+        return [1];
+      }
+      return maximum === 2 ? [2] : [2, 3];
+    }
+
+    function applyNormalLines(lines) {
+      const copy = quoteElement.querySelector(".message-copy");
+      copy.textContent = "";
+      copy.classList.toggle("is-split", lines.length > 1);
+      lines.forEach((lineText) => {
+        const line = document.createElement("span");
+        line.className = "message-line";
+        line.textContent = lineText;
+        copy.append(line);
+      });
+    }
+
+    const promoLayouts = new Map([
+      ["JOIN THE RAID|Follow Jaxnir and enter Midgard.", {
+        headline: ["JOIN THE RAID"],
+        detail: ["Follow Jaxnir", "and enter Midgard."]
+      }],
+      ["CLAIM YOUR PRIME SUB|Support the stream at no extra cost.", {
+        headline: ["CLAIM YOUR", "PRIME SUB"],
+        detail: ["Support the stream", "at no extra cost."]
+      }],
+      ["KEEP THE FIRES LIT|Every follow, cheer, and sub matters.", {
+        headline: ["KEEP THE FIRES LIT"],
+        detail: ["Every follow, cheer,", "and sub matters."]
+      }],
+      ["GAME FOR A GREATER CAUSE|Help Jaxnir support Extra Life.", {
+        headline: ["GAME FOR A", "GREATER CAUSE"],
+        detail: ["Help Jaxnir support", "Extra Life."]
+      }],
+      ["MAKE EVERY GAME COUNT|Support children and families through Extra Life.", {
+        headline: ["MAKE EVERY", "GAME COUNT"],
+        detail: ["Support children and families", "through Extra Life."]
+      }],
+      ["THE RAID IS STRONGER WITH YOU|Thank you for supporting Jaxnir.", {
+        headline: ["THE RAID IS", "STRONGER WITH YOU"],
+        detail: ["Thank you for", "supporting Jaxnir."]
+      }],
+      ["ENTER MIDGARD|Follow now and never miss the next adventure.", {
+        headline: ["ENTER MIDGARD"],
+        detail: ["Follow now and never miss", "the next adventure."]
+      }],
+      ["JOIN THE CLAN|Follow, subscribe, and claim your place.", {
+        headline: ["JOIN THE CLAN"],
+        detail: ["Follow, subscribe,", "and claim your place."]
+      }],
+      ["WATCH THE RAID LIVE|twitch.tv/Jaxnir", {
+        headline: ["WATCH THE", "RAID LIVE"],
+        detail: ["twitch.tv/Jaxnir"]
+      }],
+      ["EPIC MOMENTS. ZERO CONTEXT.|youtube.com/@Jaxnir", {
+        headline: ["EPIC MOMENTS.", "ZERO CONTEXT."],
+        detail: ["youtube.com/@Jaxnir"]
+      }],
+      ["CLIPS FROM MIDGARD|TikTok @Jaxnir", {
+        headline: ["CLIPS FROM", "MIDGARD"],
+        detail: ["TikTok @Jaxnir"]
+      }],
+      ["ENTER THE GREAT HALL|Discord link below the stream", {
+        headline: ["ENTER THE", "GREAT HALL"],
+        detail: ["Discord link", "below the stream"]
+      }]
+    ]);
+
     function renderMessage(message) {
       rotateRune();
       quoteElement.classList.remove("font-fire", "font-dragon");
@@ -1213,16 +1295,25 @@
       quoteElement.classList.toggle("is-promo", isPromo);
 
       if (isPromo) {
+        const layout = promoLayouts.get(message) || {
+          headline: balanceMessage(parts[0].trim(), 1),
+          detail: balanceMessage(parts[1].trim(), 2)
+        };
         const stack = document.createElement("span");
         stack.className = "message-stack";
 
         const headline = document.createElement("span");
         headline.className = "message-headline";
-        headline.textContent = parts[0].trim();
+        layout.headline.forEach((lineText) => {
+          const line = document.createElement("span");
+          line.className = "headline-line";
+          line.textContent = lineText;
+          headline.append(line);
+        });
 
         const detail = document.createElement("span");
         detail.className = "message-detail";
-        splitLongMessage(parts[1].trim(), 24, 48).forEach((lineText) => {
+        layout.detail.forEach((lineText) => {
           const line = document.createElement("span");
           line.className = "promo-line";
           line.textContent = lineText;
@@ -1235,17 +1326,9 @@
       }
 
       const copy = document.createElement("span");
-      const lines = splitLongMessage(message);
-      copy.className = "message-copy" + (lines.length > 1 ? " is-split" : "");
-
-      lines.forEach((lineText) => {
-        const line = document.createElement("span");
-        line.className = "message-line";
-        line.textContent = lineText;
-        copy.append(line);
-      });
-
+      copy.className = "message-copy";
       quoteElement.append(copy);
+      applyNormalLines(splitLongMessage(message));
     }
 
     let quoteDeck = [];
@@ -1347,15 +1430,15 @@
       };
     }
 
-    function fitText() {
-      if (!quoteElement.textContent || quoteCell.clientWidth === 0 || quoteCell.clientHeight === 0) {
-        return;
-      }
+    function applyFontSize(size) {
+      quoteElement.style.fontSize = `${size}px`;
+      quoteElement.style.letterSpacing = `${letterSpacingFor(size)}px`;
+    }
 
-      const isPromo = quoteElement.classList.contains("is-promo");
+    function findBestFont(isPromo) {
       const minimum = isPromo ? 24 : 20;
       const space = availableTextSpace();
-      const targetWidth = space.width * 0.96;
+      const targetWidth = space.width * (isPromo ? 0.93 : 0.94);
       const targetHeight = space.height * (isPromo ? 0.82 : 0.78);
       let low = minimum;
       let high = isPromo ? 104 : 118;
@@ -1363,13 +1446,9 @@
 
       for (let pass = 0; pass < 12; pass += 1) {
         const size = (low + high) / 2;
-        quoteElement.style.fontSize = `${size}px`;
-        quoteElement.style.letterSpacing = `${letterSpacingFor(size)}px`;
-
+        applyFontSize(size);
         const metrics = contentMetrics();
-        const fits = metrics.width <= targetWidth && metrics.height <= targetHeight;
-
-        if (fits) {
+        if (metrics.width <= targetWidth && metrics.height <= targetHeight) {
           best = size;
           low = size;
         } else {
@@ -1377,23 +1456,64 @@
         }
       }
 
-      quoteElement.style.fontSize = `${best}px`;
-      quoteElement.style.letterSpacing = `${letterSpacingFor(best)}px`;
-
+      applyFontSize(best);
+      let metrics = contentMetrics();
       let corrected = best;
       let guard = 0;
-      let metrics = contentMetrics();
+
       while (
         guard < 20
         && corrected > minimum
         && (metrics.width > targetWidth || metrics.height > targetHeight)
       ) {
         corrected = Math.max(minimum, corrected - 0.75);
-        quoteElement.style.fontSize = `${corrected}px`;
-        quoteElement.style.letterSpacing = `${letterSpacingFor(corrected)}px`;
+        applyFontSize(corrected);
         metrics = contentMetrics();
         guard += 1;
       }
+
+      return {
+        size: corrected,
+        metrics,
+        widthFill: metrics.width / space.width,
+        heightFill: metrics.height / space.height
+      };
+    }
+
+    function fitText() {
+      if (!quoteElement.textContent || quoteCell.clientWidth === 0 || quoteCell.clientHeight === 0) {
+        return;
+      }
+
+      const isPromo = quoteElement.classList.contains("is-promo");
+      if (isPromo) {
+        findBestFont(true);
+        return;
+      }
+
+      let bestLayout = null;
+      normalLineCandidates(currentMessage).forEach((lineCount) => {
+        const lines = balanceMessage(currentMessage, lineCount);
+        applyNormalLines(lines);
+        const result = findBestFont(false);
+        const widthScore = Math.min(result.widthFill / 0.9, 1);
+        const heightScore = Math.min(result.heightFill / 0.58, 1);
+        const fontScore = Math.min(result.size / 42, 1);
+        const score = widthScore * 0.4 + heightScore * 0.4 + fontScore * 0.2;
+
+        if (!bestLayout || score > bestLayout.score) {
+          bestLayout = {
+            score,
+            lines,
+            size: result.size,
+            widthFill: result.widthFill,
+            heightFill: result.heightFill
+          };
+        }
+      });
+
+      applyNormalLines(bestLayout.lines);
+      applyFontSize(bestLayout.size);
     }
 
     function requestFit() {
@@ -1491,8 +1611,10 @@
           const contentRect = metrics.content.getBoundingClientRect();
           const fontSize = Number.parseFloat(getComputedStyle(quoteElement).fontSize);
           const lineCount = isPromo
-            ? 1 + quoteElement.querySelectorAll(".promo-line").length
+            ? quoteElement.querySelectorAll(".headline-line, .promo-line").length
             : quoteElement.querySelectorAll(".message-line").length;
+          const renderedLines = [...quoteElement.querySelectorAll(".headline-line, .promo-line, .message-line")]
+            .map((line) => line.textContent);
           const leftSafe = contentRect.left - quoteRect.left;
           const rightSafe = quoteRect.right - contentRect.right;
           const topSafe = contentRect.top - quoteCell.getBoundingClientRect().top;
@@ -1510,6 +1632,7 @@
             isPromo,
             fontSize: Number(fontSize.toFixed(2)),
             lineCount,
+            renderedLines,
             width: metrics.width,
             height: metrics.height,
             widthFill: Number(widthFill.toFixed(3)),
@@ -1524,7 +1647,7 @@
 
           if (
             clipped
-            || metrics.width > space.width * 0.965
+            || metrics.width > space.width * (isPromo ? 0.935 : 0.945)
             || metrics.height > space.height * (isPromo ? 0.825 : 0.785)
             || fontSize < (isPromo ? 23.9 : 19.9)
           ) {
