@@ -111,7 +111,7 @@
 
     .rune-field {
       position: absolute;
-      inset: 2% 4%;
+      inset: -4% 0;
       z-index: 0;
       display: grid;
       place-items: center;
@@ -132,11 +132,11 @@
     }
 
     .rune-mark {
-      height: 110%;
-      width: min(52%, 520px);
-      min-width: 180px;
+      height: 140%;
+      width: min(64%, 680px);
+      min-width: 260px;
       overflow: visible;
-      opacity: 0.32;
+      opacity: 0.3;
       filter:
         drop-shadow(0 0 4px rgba(84, 199, 255, 0.92))
         drop-shadow(0 0 13px rgba(23, 145, 234, 0.82))
@@ -161,20 +161,97 @@
     .rune-active {
       transform-box: fill-box;
       transform-origin: center;
-      transform: scale(1.08);
+      transform: scale(1.12);
     }
 
     .traditional-glyph {
       fill: url(#runeGradient);
-      stroke: rgba(201, 239, 255, 0.34);
-      stroke-width: 0.9;
+      stroke: rgba(224, 248, 255, 0.72);
+      stroke-width: 1.35;
       paint-order: stroke fill;
       font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", "Apple Symbols", serif;
-      font-size: 108px;
+      font-size: 116px;
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0;
       dominant-baseline: middle;
+    }
+
+    .traditional-glyph.glyph-shadow {
+      fill: none;
+      stroke: rgba(0, 71, 132, 0.78);
+      stroke-width: 6;
+      opacity: 0.76;
+      paint-order: stroke;
+    }
+
+    .rune-mark .forged-body,
+    .rune-mark .valknut-band {
+      fill: url(#forgedMetal) !important;
+      stroke: rgba(177, 230, 255, 0.94) !important;
+      stroke-width: 3.2 !important;
+      paint-order: stroke fill;
+    }
+
+    .rune-mark .forged-inset,
+    .rune-mark .forged-engraving {
+      fill: none !important;
+      stroke: rgba(176, 231, 255, 0.9) !important;
+      stroke-width: 2.4 !important;
+    }
+
+    .rune-mark .forged-highlight {
+      fill: none !important;
+      stroke: rgba(233, 250, 255, 0.96) !important;
+      stroke-width: 1.25 !important;
+    }
+
+    .rune-mark .forged-stud {
+      fill: #dff8ff !important;
+      stroke: #178ed8 !important;
+      stroke-width: 1.6 !important;
+    }
+
+    .rune-mark .valknut-band {
+      fill-rule: evenodd;
+      stroke-width: 2.2 !important;
+    }
+
+    .rune-mark .valknut-cut {
+      fill: none !important;
+      stroke: rgba(2, 13, 24, 0.96) !important;
+      stroke-width: 10 !important;
+      stroke-linecap: butt;
+    }
+
+    .rune-mark .valknut-cross {
+      fill: none !important;
+      stroke: rgba(210, 244, 255, 0.96) !important;
+      stroke-width: 3.2 !important;
+      stroke-linecap: butt;
+    }
+
+    .ornate-frame {
+      opacity: 0.78;
+    }
+
+    .ornate-frame .ornate-ring {
+      fill: none;
+      stroke: rgba(104, 205, 255, 0.42);
+      stroke-width: 1.2;
+      stroke-dasharray: 1 6;
+    }
+
+    .ornate-frame .ornate-knot {
+      fill: none !important;
+      stroke: rgba(150, 225, 255, 0.66) !important;
+      stroke-width: 2.1 !important;
+    }
+
+    .ornate-frame .ornate-stud {
+      fill: #c7efff;
+      stroke: #117cbe;
+      stroke-width: 1.1;
     }
 
 
@@ -293,8 +370,35 @@
       animation: emoji-float 3.6s ease-in-out infinite;
     }
 
+    .quote:not(.is-promo) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.28em;
+    }
+
+    .quote:not(.is-promo) .message-emoji {
+      flex: 0 0 auto;
+      margin-right: 0;
+    }
+
     .message-copy {
-      display: inline;
+      display: inline-flex;
+      min-width: 0;
+      max-width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.07;
+    }
+
+    .message-line {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .message-copy.is-split {
+      row-gap: 0.06em;
     }
 
 
@@ -581,8 +685,24 @@
       }
 
       .rune-mark {
-        width: min(68%, 380px);
+        width: min(86%, 460px);
       }
+    }
+
+    html.meld-preview,
+    html.meld-preview body {
+      width: 504px;
+      height: 284px;
+      min-width: 504px;
+      min-height: 284px;
+    }
+
+    html.meld-preview .banner {
+      inset: auto;
+      top: 0;
+      left: 0;
+      width: 504px;
+      height: 284px;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -608,9 +728,16 @@
       <svg class="rune-mark" viewBox="0 0 180 180" focusable="false">
         <defs>
           <linearGradient id="runeGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#d8f5ff"/>
-            <stop offset="0.45" stop-color="#56c8ff"/>
+            <stop offset="0" stop-color="#e5f9ff"/>
+            <stop offset="0.42" stop-color="#65ceff"/>
             <stop offset="1" stop-color="#0878d0"/>
+          </linearGradient>
+          <linearGradient id="forgedMetal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d9f5ff"/>
+            <stop offset="0.18" stop-color="#5db7e8"/>
+            <stop offset="0.48" stop-color="#0b4774"/>
+            <stop offset="0.72" stop-color="#75c8ef"/>
+            <stop offset="1" stop-color="#052844"/>
           </linearGradient>
           <path id="rune-ring-track" d="M90 15a75 75 0 1 1 0 150a75 75 0 1 1 0-150"/>
 
@@ -619,14 +746,24 @@
           </symbol>
 
           <symbol id="rune-mjolnir" viewBox="0 0 180 180">
-            <path d="M38 35h104v42l-23 18h-15v59H76V95H61L38 77z"/>
-            <path d="M58 35v42M122 35v42M76 122h28"/>
+            <path class="forged-body" d="M31 39L49 21h82l18 18-7 34-22 18h-11v52l-19 19-19-19V91H60L38 73z"/>
+            <path class="forged-inset" d="M48 43l11-10h62l11 10-5 23-15 12H68L53 66z"/>
+            <path class="forged-engraving" d="M61 57c8-15 20-15 29 0s21 15 29 0M61 57c8 15 20 15 29 0s21-15 29 0"/>
+            <path class="forged-highlight" d="M90 45l10 12-10 12-10-12zM77 100l13 10 13-10M77 116l13 10 13-10M77 132l13 10 13-10"/>
+            <circle class="forged-stud" cx="48" cy="59" r="3.2"/>
+            <circle class="forged-stud" cx="132" cy="59" r="3.2"/>
+            <circle class="forged-stud" cx="90" cy="151" r="3"/>
           </symbol>
 
           <symbol id="rune-valknut" viewBox="0 0 180 180">
-            <polygon points="90,20 151,127 29,127"/>
-            <polygon points="55,68 145,68 100,148"/>
-            <polygon points="125,68 80,148 35,68"/>
+            <path class="valknut-band" fill-rule="evenodd" d="M62 28l60 104H2zM62 52l39 66H23z"/>
+            <path class="valknut-band" fill-rule="evenodd" d="M118 28l60 104H58zM118 52l39 66H79z"/>
+            <path class="valknut-band" fill-rule="evenodd" d="M90 40l61 106H29zM90 64l40 68H50z"/>
+            <path class="valknut-cut" d="M53 116l14 24M127 116l-14 24M74 77h32"/>
+            <path class="valknut-cross" d="M55 116l12 21M125 116l-12 21M76 77h28"/>
+            <circle class="forged-stud" cx="90" cy="57" r="3"/>
+            <circle class="forged-stud" cx="43" cy="139" r="3"/>
+            <circle class="forged-stud" cx="137" cy="139" r="3"/>
           </symbol>
 
           <symbol id="rune-tiwaz" viewBox="0 0 180 180">
@@ -666,101 +803,136 @@
             <polygon points="90,22 145,90 90,158 35,90"/>
           </symbol>
           <symbol id="elder-fehu" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚠ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚠ</text>
           </symbol>
 
           <symbol id="elder-uruz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚢ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚢ</text>
           </symbol>
 
           <symbol id="elder-thurisaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚦ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚦ</text>
           </symbol>
 
           <symbol id="elder-ansuz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚨ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚨ</text>
           </symbol>
 
           <symbol id="elder-raidho" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚱ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚱ</text>
           </symbol>
 
           <symbol id="elder-kenaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚲ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚲ</text>
           </symbol>
 
           <symbol id="elder-gebo" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚷ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚷ</text>
           </symbol>
 
           <symbol id="elder-wunjo" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚹ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚹ</text>
           </symbol>
 
           <symbol id="elder-hagalaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚺ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚺ</text>
           </symbol>
 
           <symbol id="elder-nauthiz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᚾ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᚾ</text>
           </symbol>
 
           <symbol id="elder-isa" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛁ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛁ</text>
           </symbol>
 
           <symbol id="elder-jera" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛃ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛃ</text>
           </symbol>
 
           <symbol id="elder-eihwaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛇ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛇ</text>
           </symbol>
 
           <symbol id="elder-perthro" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛈ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛈ</text>
           </symbol>
 
           <symbol id="elder-algiz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛉ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛉ</text>
           </symbol>
 
           <symbol id="elder-sowilo" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛋ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛋ</text>
           </symbol>
 
           <symbol id="elder-tiwaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛏ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛏ</text>
           </symbol>
 
           <symbol id="elder-berkano" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛒ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛒ</text>
           </symbol>
 
           <symbol id="elder-ehwaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛖ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛖ</text>
           </symbol>
 
           <symbol id="elder-mannaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛗ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛗ</text>
           </symbol>
 
           <symbol id="elder-laguz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛚ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛚ</text>
           </symbol>
 
           <symbol id="elder-ingwaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛜ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛜ</text>
           </symbol>
 
           <symbol id="elder-dagaz" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛞ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛞ</text>
           </symbol>
 
           <symbol id="elder-othala" viewBox="0 0 180 180">
+            <text class="traditional-glyph glyph-shadow" x="90" y="94" text-anchor="middle">ᛟ</text>
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛟ</text>
           </symbol>
         </defs>
+        <g class="ornate-frame">
+          <circle class="ornate-ring" cx="90" cy="90" r="84"/>
+          <path class="ornate-knot" d="M90 5c10 14 20 20 32 23-11 3-21 9-32 23-11-14-21-20-32-23 12-3 22-9 32-23z"/>
+          <path class="ornate-knot" d="M90 175c-10-14-20-20-32-23 11-3 21-9 32-23 11 14 21 20 32 23-12 3-22 9-32 23z"/>
+          <path class="ornate-knot" d="M5 90c14-10 20-20 23-32 3 11 9 21 23 32-14 11-20 21-23 32-3-12-9-22-23-32z"/>
+          <path class="ornate-knot" d="M175 90c-14 10-20 20-23 32-3-11-9-21-23-32 14-11 20-21 23-32 3 12 9 22 23 32z"/>
+          <circle class="ornate-stud" cx="90" cy="8" r="2.4"/>
+          <circle class="ornate-stud" cx="172" cy="90" r="2.4"/>
+          <circle class="ornate-stud" cx="90" cy="172" r="2.4"/>
+          <circle class="ornate-stud" cx="8" cy="90" r="2.4"/>
+        </g>
         <g class="rune-wheel">
           <circle class="wheel-ring" cx="90" cy="90" r="76"/>
           <circle class="wheel-ring-inner" cx="90" cy="90" r="63"/>
@@ -908,8 +1080,14 @@
 
     const query = new URLSearchParams(window.location.search);
     const testMode = query.has("test");
-    const DISPLAY_MS = testMode ? 900 : 9000;
-    const TRANSITION_MS = testMode ? 120 : 600;
+    const previewMode = query.get("preview");
+
+    if (previewMode === "meld") {
+      document.documentElement.classList.add("meld-preview");
+    }
+
+    const DISPLAY_MS = testMode ? 120 : 9000;
+    const TRANSITION_MS = testMode ? 20 : 600;
     const QUOTES_PER_CALLOUT = 2;
 
     const quoteElement = document.getElementById("quote");
@@ -992,6 +1170,48 @@
 
     let fontTurn = 0;
 
+    function splitLongMessage(message) {
+      const text = message.trim();
+      if (text.length <= 40) {
+        return [text];
+      }
+
+      const words = text.split(/\s+/);
+      if (words.length < 4) {
+        return [text];
+      }
+
+      const target = text.length / 2;
+      let running = 0;
+      let bestIndex = 1;
+      let bestScore = Number.POSITIVE_INFINITY;
+
+      for (let index = 1; index < words.length; index += 1) {
+        running += words[index - 1].length + (index === 1 ? 0 : 1);
+        const leftWords = index;
+        const rightWords = words.length - index;
+
+        if (leftWords < 2 || rightWords < 2) {
+          continue;
+        }
+
+        let score = Math.abs(running - target);
+        if (/[,:;.!?]$/.test(words[index - 1])) {
+          score -= 7;
+        }
+
+        if (score < bestScore) {
+          bestScore = score;
+          bestIndex = index;
+        }
+      }
+
+      return [
+        words.slice(0, bestIndex).join(" "),
+        words.slice(bestIndex).join(" ")
+      ];
+    }
+
     function renderMessage(message) {
       rotateRune();
       quoteElement.classList.remove("font-fire", "font-dragon");
@@ -1026,8 +1246,16 @@
       }
 
       const copy = document.createElement("span");
-      copy.className = "message-copy";
-      copy.textContent = message;
+      const lines = splitLongMessage(message);
+      copy.className = "message-copy" + (lines.length > 1 ? " is-split" : "");
+
+      lines.forEach((lineText) => {
+        const line = document.createElement("span");
+        line.className = "message-line";
+        line.textContent = lineText;
+        copy.append(line);
+      });
+
       quoteElement.append(emoji, copy);
     }
 
@@ -1204,6 +1432,10 @@
 
     const resizeObserver = new ResizeObserver(requestFit);
     resizeObserver.observe(quoteCell);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(requestFit);
+    }
 
     document.addEventListener("visibilitychange", () => {
       clearTimer();
