@@ -1137,7 +1137,7 @@
     function balanceMessage(message, requestedLines) {
       const text = message.trim();
       const words = text.split(/\s+/);
-      const maximumBalancedLines = Math.max(1, Math.floor(words.length / 2));
+      const maximumBalancedLines = Math.max(1, Math.min(3, words.length));
       const desiredLines = Math.max(1, Math.min(requestedLines, maximumBalancedLines));
 
       if (desiredLines === 1) {
@@ -1166,7 +1166,7 @@
         for (let index = 0; index < points.length - 1; index += 1) {
           const start = points[index];
           const end = points[index + 1];
-          if (end - start < 2) {
+          if (end - start < 1) {
             return;
           }
           lines.push(words.slice(start, end).join(" "));
@@ -1191,12 +1191,12 @@
       };
 
       if (desiredLines === 2) {
-        for (let first = 2; first <= words.length - 2; first += 1) {
+        for (let first = 1; first <= words.length - 1; first += 1) {
           consider([first]);
         }
       } else {
-        for (let first = 2; first <= words.length - 4; first += 1) {
-          for (let second = first + 2; second <= words.length - 2; second += 1) {
+        for (let first = 1; first <= words.length - 2; first += 1) {
+          for (let second = first + 1; second <= words.length - 1; second += 1) {
             consider([first, second]);
           }
         }
@@ -1213,7 +1213,7 @@
 
     function normalLineCandidates(message) {
       const wordCount = message.trim().split(/\s+/).length;
-      const maximum = Math.min(3, Math.max(1, Math.floor(wordCount / 2)));
+      const maximum = Math.min(3, Math.max(1, wordCount));
       if (maximum === 1) {
         return [1];
       }
@@ -1234,7 +1234,7 @@
 
     const promoLayouts = new Map([
       ["JOIN THE RAID|Follow Jaxnir and enter Midgard.", {
-        headline: ["JOIN THE RAID"],
+        headline: ["JOIN THE", "RAID"],
         detail: ["Follow Jaxnir", "and enter Midgard."]
       }],
       ["CLAIM YOUR PRIME SUB|Support the stream at no extra cost.", {
@@ -1242,7 +1242,7 @@
         detail: ["Support the stream", "at no extra cost."]
       }],
       ["KEEP THE FIRES LIT|Every follow, cheer, and sub matters.", {
-        headline: ["KEEP THE FIRES LIT"],
+        headline: ["KEEP THE", "FIRES LIT"],
         detail: ["Every follow, cheer,", "and sub matters."]
       }],
       ["GAME FOR A GREATER CAUSE|Help Jaxnir support Extra Life.", {
@@ -1251,18 +1251,18 @@
       }],
       ["MAKE EVERY GAME COUNT|Support children and families through Extra Life.", {
         headline: ["MAKE EVERY", "GAME COUNT"],
-        detail: ["Support children and families", "through Extra Life."]
+        detail: ["Support children", "and families through", "Extra Life."]
       }],
       ["THE RAID IS STRONGER WITH YOU|Thank you for supporting Jaxnir.", {
-        headline: ["THE RAID IS", "STRONGER WITH YOU"],
+        headline: ["THE RAID", "IS STRONGER", "WITH YOU"],
         detail: ["Thank you for", "supporting Jaxnir."]
       }],
       ["ENTER MIDGARD|Follow now and never miss the next adventure.", {
-        headline: ["ENTER MIDGARD"],
+        headline: ["ENTER", "MIDGARD"],
         detail: ["Follow now and never miss", "the next adventure."]
       }],
       ["JOIN THE CLAN|Follow, subscribe, and claim your place.", {
-        headline: ["JOIN THE CLAN"],
+        headline: ["JOIN THE", "CLAN"],
         detail: ["Follow, subscribe,", "and claim your place."]
       }],
       ["WATCH THE RAID LIVE|twitch.tv/Jaxnir", {
