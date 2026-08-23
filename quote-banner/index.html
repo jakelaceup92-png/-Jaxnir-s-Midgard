@@ -161,7 +161,7 @@
     .rune-active {
       transform-box: fill-box;
       transform-origin: center;
-      transform: scale(1.38);
+      transform: scale(2.1);
     }
 
     .traditional-glyph {
@@ -170,7 +170,7 @@
       stroke-width: 1.35;
       paint-order: stroke fill;
       font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", "Apple Symbols", serif;
-      font-size: 132px;
+      font-size: 164px;
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0;
@@ -418,7 +418,7 @@
 
     .message-stack {
       display: inline-flex;
-      width: min(100%, 420px);
+      width: min(92%, 440px);
       min-width: 0;
       max-width: 100%;
       flex-direction: column;
@@ -431,7 +431,7 @@
     .message-headline {
       display: block;
       color: #f4fbff;
-      font-size: 1em;
+      font-size: 1.24em;
       font-weight: 700;
       line-height: 1.02;
       letter-spacing: 0.09em;
@@ -444,7 +444,7 @@
       display: block;
       margin-top: 0.22em;
       color: #9edcff;
-      font-size: 0.58em;
+      font-size: 0.78em;
       font-weight: 600;
       line-height: 1.08;
       letter-spacing: 0.1em;
@@ -1179,44 +1179,72 @@
 
     function splitLongMessage(message) {
       const text = message.trim();
-      if (text.length <= 32) {
-        return [text];
-      }
-
       const words = text.split(/\s+/);
-      if (words.length < 4) {
+      const desiredLines = text.length <= 28 ? 1 : (text.length <= 56 ? 2 : 3);
+
+      if (desiredLines === 1 || words.length < desiredLines * 2) {
         return [text];
       }
 
-      const target = text.length / 2;
-      let running = 0;
-      let bestIndex = 1;
+      const prefix = [0];
+      words.forEach((word, index) => {
+        prefix.push(prefix[index] + word.length + (index > 0 ? 1 : 0));
+      });
+
+      const lineLength = (start, end) => {
+        const raw = prefix[end] - prefix[start];
+        return start > 0 ? raw - 1 : raw;
+      };
+
+      let bestLines = [text];
       let bestScore = Number.POSITIVE_INFINITY;
+      const target = text.length / desiredLines;
 
-      for (let index = 1; index < words.length; index += 1) {
-        running += words[index - 1].length + (index === 1 ? 0 : 1);
-        const leftWords = index;
-        const rightWords = words.length - index;
+      const consider = (breaks) => {
+        const points = [0, ...breaks, words.length];
+        const lines = [];
+        const lengths = [];
 
-        if (leftWords < 2 || rightWords < 2) {
-          continue;
+        for (let index = 0; index < points.length - 1; index += 1) {
+          const start = points[index];
+          const end = points[index + 1];
+          if (end - start < 2) {
+            return;
+          }
+          lines.push(words.slice(start, end).join(" "));
+          lengths.push(lineLength(start, end));
         }
 
-        let score = Math.abs(running - target);
-        if (/[,:;.!?]$/.test(words[index - 1])) {
-          score -= 7;
-        }
+        const longest = Math.max(...lengths);
+        const shortest = Math.min(...lengths);
+        let score = lengths.reduce((sum, length) => sum + Math.pow(length - target, 2), 0);
+        score += Math.pow(longest - shortest, 2) * 0.8;
+
+        breaks.forEach((breakIndex) => {
+          if (/[,:;.!?]$/.test(words[breakIndex - 1])) {
+            score -= 24;
+          }
+        });
 
         if (score < bestScore) {
           bestScore = score;
-          bestIndex = index;
+          bestLines = lines;
+        }
+      };
+
+      if (desiredLines === 2) {
+        for (let first = 2; first <= words.length - 2; first += 1) {
+          consider([first]);
+        }
+      } else {
+        for (let first = 2; first <= words.length - 4; first += 1) {
+          for (let second = first + 2; second <= words.length - 2; second += 1) {
+            consider([first, second]);
+          }
         }
       }
 
-      return [
-        words.slice(0, bestIndex).join(" "),
-        words.slice(bestIndex).join(" ")
-      ];
+      return bestLines;
     }
 
     function renderMessage(message) {
@@ -1348,15 +1376,15 @@
       }
 
       const isPromo = quoteElement.classList.contains("is-promo");
-      const minimum = isPromo ? 16 : 14;
-      const maximumLines = isPromo ? 4 : 2;
+      const minimum = isPromo ? 24 : 20;
+      const maximumLines = isPromo ? 6 : 3;
       let low = minimum;
       let high = Math.max(
         minimum,
         Math.min(
           180,
-          quoteCell.clientHeight * (isPromo ? 0.42 : 0.52),
-          quoteCell.clientWidth / (isPromo ? 5.2 : 6.5)
+          quoteCell.clientHeight * (isPromo ? 0.34 : 0.46),
+          quoteCell.clientWidth / (isPromo ? 6.2 : 6.8)
         )
       );
       let best = minimum;
@@ -1528,7 +1556,7 @@
             });
           }
 
-          if (!isPromo && message.length > 32 && lineCount < 2) {
+          if (!isPromo && message.length > 28 && lineCount < 2) {
             unsplitLong.push(message);
           }
 
