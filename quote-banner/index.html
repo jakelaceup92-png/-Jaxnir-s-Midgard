@@ -16,6 +16,23 @@
       --transition-ms: 600ms;
     }
 
+
+    @font-face {
+      font-family: "Jaxnir Breathe Fire";
+      src:
+        local("Breathe Fire IV"),
+        local("BreatheFireIV");
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Jaxnir Dragonlands";
+      src:
+        local("Dragonlands"),
+        local("Dragonlands Regular");
+      font-display: swap;
+    }
+
     *, *::before, *::after {
       box-sizing: border-box;
     }
@@ -224,6 +241,28 @@
       will-change: opacity, transform;
     }
 
+
+
+    .quote.font-fire {
+      font-family: "Jaxnir Breathe Fire", "Breathe Fire IV", "Old English Text MT", "Copperplate Gothic Bold", serif;
+      text-transform: uppercase;
+    }
+
+    .quote.font-dragon {
+      font-family: "Jaxnir Dragonlands", "Dragonlands", "Copperplate Gothic Bold", "Palatino Linotype", Georgia, serif;
+      text-transform: uppercase;
+    }
+
+    .quote.font-fire .message-headline,
+    .quote.font-dragon .message-headline {
+      font-family: inherit;
+    }
+
+    .quote.font-fire .message-detail,
+    .quote.font-dragon .message-detail {
+      font-family: "Cinzel", "Copperplate Gothic Bold", "Constantia", "Palatino Linotype", Georgia, serif;
+      text-transform: uppercase;
+    }
 
     .message-emoji {
       display: inline-block;
@@ -932,8 +971,13 @@
       return match ? match.emoji : "✨";
     }
 
+    let fontTurn = 0;
+
     function renderMessage(message) {
       rotateRune();
+      quoteElement.classList.remove("font-fire", "font-dragon");
+      quoteElement.classList.add(fontTurn % 2 === 0 ? "font-fire" : "font-dragon");
+      fontTurn += 1;
       quoteElement.textContent = "";
 
       const emoji = document.createElement("span");
@@ -1034,6 +1078,16 @@
       timerId = window.setTimeout(callback, delay);
     }
 
+    function letterSpacingFor(size) {
+      if (quoteElement.classList.contains("font-dragon")) {
+        return Math.max(0.45, size * 0.028);
+      }
+      if (quoteElement.classList.contains("font-fire")) {
+        return Math.max(0.45, size * 0.045);
+      }
+      return Math.max(0.55, size * 0.075);
+    }
+
     function fitText() {
       if (!quoteElement.textContent || quoteCell.clientWidth === 0 || quoteCell.clientHeight === 0) {
         return;
@@ -1047,7 +1101,7 @@
       for (let pass = 0; pass < 11; pass += 1) {
         const size = (low + high) / 2;
         quoteElement.style.fontSize = `${size}px`;
-        quoteElement.style.letterSpacing = `${Math.max(0.55, size * 0.085)}px`;
+        quoteElement.style.letterSpacing = `${letterSpacingFor(size)}px`;
 
         const lineHeight = size * 1.1;
         const lineCount = Math.ceil(quoteElement.scrollHeight / lineHeight - 0.02);
