@@ -162,6 +162,29 @@
       will-change: opacity, transform;
     }
 
+
+    .message-emoji {
+      display: inline-block;
+      margin-right: 0.4em;
+      color: initial;
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+      font-size: 0.72em;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: 400;
+      line-height: 1;
+      vertical-align: 0.08em;
+      text-shadow: none;
+      filter:
+        drop-shadow(0 0 3px rgba(212, 246, 255, 0.9))
+        drop-shadow(0 0 8px rgba(49, 179, 255, 0.6));
+      animation: emoji-float 3.6s ease-in-out infinite;
+    }
+
+    .message-copy {
+      display: inline;
+    }
+
     .quote.is-exiting {
       opacity: 0;
       transform: translateY(-8px);
@@ -345,6 +368,21 @@
       }
     }
 
+    @keyframes emoji-float {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        filter:
+          drop-shadow(0 0 3px rgba(212, 246, 255, 0.82))
+          drop-shadow(0 0 7px rgba(49, 179, 255, 0.48));
+      }
+      50% {
+        transform: translateY(-0.08em) scale(1.06);
+        filter:
+          drop-shadow(0 0 4px rgba(238, 252, 255, 1))
+          drop-shadow(0 0 11px rgba(49, 179, 255, 0.76));
+      }
+    }
+
     @keyframes blue-drift {
       from {
         transform: translate3d(-1.5%, -1%, 0) scale(1.02);
@@ -368,7 +406,8 @@
       .banner,
       .banner::before,
       .rune-mark,
-      .perimeter-light {
+      .perimeter-light,
+      .message-emoji {
         animation: none !important;
       }
 
@@ -535,6 +574,56 @@
     const quoteElement = document.getElementById("quote");
     const quoteCell = document.querySelector(".quote-cell");
 
+    const emojiRules = [
+      { pattern: /\bclimb\b|\bmountain\b/i, emoji: "🏔️" },
+      { pattern: /\bstorms?\b/i, emoji: "⛈️" },
+      { pattern: /\bdarkest\b|\bnight\b/i, emoji: "🌙" },
+      { pattern: /\bsunrise\b|\bdawn\b|\blight tomorrow\b/i, emoji: "🌅" },
+      { pattern: /\bjourney\b|\bdirection\b|\bwherever\b|\bway out\b/i, emoji: "🧭" },
+      { pattern: /\bstep\b|\bpace\b|\bforward\b|\bmoving\b|\bprogress\b/i, emoji: "🥾" },
+      { pattern: /\bgrowth\b|\bgrow\b|\broots?\b/i, emoji: "🌱" },
+      { pattern: /\bstory\b|\bchapter\b|\bpast teach\b/i, emoji: "📖" },
+      { pattern: /\bkindness\b|\bhappiness\b|\bpeace\b|\bheart\b/i, emoji: "💙" },
+      { pattern: /\bcourage\b|\bbold\b|\bfear\b|\bconflict\b|\bstrong\b|\bstrength\b|\bfight\b/i, emoji: "🛡️" },
+      { pattern: /\btriumph\b|\bvictory\b|\bsuccess\b|\bbreakthrough\b|\bcomeback\b|\bwins?\b/i, emoji: "🏆" },
+      { pattern: /\bbuild\b|\bwork\b|\beffort\b|\baction\b|\bdiscipline\b|\bhabits?\b|\bconsistency\b|\bresults?\b/i, emoji: "⚒️" },
+      { pattern: /\bhope\b|\bdream\b|\bpotential\b|\bpossibility\b/i, emoji: "✨" },
+      { pattern: /\bpatience\b|\buncertainty\b|\bprocess\b/i, emoji: "⏳" },
+      { pattern: /\bbegin\b|\bstart\b|\breset\b|\banother chance\b|\bbegin again\b/i, emoji: "🔄" },
+      { pattern: /\bfuture\b|\btomorrow\b/i, emoji: "🔮" },
+      { pattern: /\bpressure\b|\bobstacle\b|\bhard days?\b|\bsetback\b|\bstruggle\b/i, emoji: "🔥" },
+      { pattern: /\bshowing up\b|\bshow up\b|\bkeep going\b|\brefusing to quit\b|\bdo not quit\b/i, emoji: "⚔️" },
+      { pattern: /\bPrime\b/i, emoji: "👑" },
+      { pattern: /\bExtra Life\b|\bTWITCH\b/i, emoji: "🎮" },
+      { pattern: /\bYOUTUBE\b/i, emoji: "▶️" },
+      { pattern: /\bTIKTOK\b/i, emoji: "🎵" },
+      { pattern: /\bDISCORD\b/i, emoji: "💬" },
+      { pattern: /\bfollow\b/i, emoji: "👣" },
+      { pattern: /\bthank\b/i, emoji: "🙏" },
+      { pattern: /\bsupport\b|\bcommunity\b/i, emoji: "🤝" }
+    ];
+
+    function emojiForMessage(message) {
+      const match = emojiRules.find((rule) => rule.pattern.test(message));
+      return match ? match.emoji : "✨";
+    }
+
+    function renderMessage(message) {
+      quoteElement.textContent = "";
+
+      const emoji = document.createElement("span");
+      emoji.className = "message-emoji";
+      emoji.setAttribute("aria-hidden", "true");
+      emoji.textContent = emojiForMessage(message);
+
+      const copy = document.createElement("span");
+      copy.className = "message-copy";
+      copy.textContent = message;
+
+      quoteElement.append(emoji, copy);
+    }
+
+
     let quoteDeck = [];
     let deckIndex = 0;
     let supportIndex = 0;
@@ -651,7 +740,7 @@
 
     function replaceMessage() {
       currentMessage = nextMessage();
-      quoteElement.textContent = currentMessage;
+      renderMessage(currentMessage);
       quoteElement.classList.remove("is-exiting");
       quoteElement.classList.add("is-entering");
       fitText();
@@ -668,7 +757,7 @@
       clearTimer();
       refillDeck();
       currentMessage = nextMessage();
-      quoteElement.textContent = currentMessage;
+      renderMessage(currentMessage);
       quoteElement.classList.remove("is-exiting", "is-entering");
       fitText();
       schedule(beginExit, DISPLAY_MS);
