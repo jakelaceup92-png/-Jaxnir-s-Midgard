@@ -161,7 +161,7 @@
     .rune-active {
       transform-box: fill-box;
       transform-origin: center;
-      transform: scale(1.12);
+      transform: scale(1.38);
     }
 
     .traditional-glyph {
@@ -170,7 +170,7 @@
       stroke-width: 1.35;
       paint-order: stroke fill;
       font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", "Apple Symbols", serif;
-      font-size: 116px;
+      font-size: 132px;
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0;
@@ -418,11 +418,14 @@
 
     .message-stack {
       display: inline-flex;
+      width: min(100%, 420px);
       min-width: 0;
+      max-width: 100%;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
       line-height: 1;
+      text-align: center;
     }
 
     .message-headline {
@@ -432,7 +435,9 @@
       font-weight: 700;
       line-height: 1.02;
       letter-spacing: 0.09em;
-      white-space: nowrap;
+      max-width: 100%;
+      white-space: normal;
+      text-wrap: balance;
     }
 
     .message-detail {
@@ -443,7 +448,9 @@
       font-weight: 600;
       line-height: 1.08;
       letter-spacing: 0.1em;
-      white-space: nowrap;
+      max-width: 100%;
+      white-space: normal;
+      text-wrap: balance;
       text-shadow:
         0 1px 1px rgba(0, 0, 0, 0.94),
         0 0 8px rgba(50, 177, 255, 0.38);
@@ -681,7 +688,7 @@
 
     @media (max-aspect-ratio: 4 / 1) {
       .quote-cell {
-        padding-inline: clamp(15px, 3vw, 46px);
+        padding-inline: clamp(28px, 6vw, 56px);
       }
 
       .rune-mark {
@@ -1172,7 +1179,7 @@
 
     function splitLongMessage(message) {
       const text = message.trim();
-      if (text.length <= 40) {
+      if (text.length <= 32) {
         return [text];
       }
 
@@ -1340,9 +1347,18 @@
         return;
       }
 
-      const minimum = 10;
+      const isPromo = quoteElement.classList.contains("is-promo");
+      const minimum = isPromo ? 16 : 14;
+      const maximumLines = isPromo ? 4 : 2;
       let low = minimum;
-      let high = Math.max(minimum, Math.min(180, quoteCell.clientHeight * 0.52, quoteCell.clientWidth / 6.5));
+      let high = Math.max(
+        minimum,
+        Math.min(
+          180,
+          quoteCell.clientHeight * (isPromo ? 0.42 : 0.52),
+          quoteCell.clientWidth / (isPromo ? 5.2 : 6.5)
+        )
+      );
       let best = minimum;
 
       for (let pass = 0; pass < 11; pass += 1) {
@@ -1354,7 +1370,7 @@
         const lineCount = Math.ceil(quoteElement.scrollHeight / lineHeight - 0.02);
         const fits = quoteElement.scrollHeight <= quoteCell.clientHeight - 4
           && quoteElement.scrollWidth <= quoteCell.clientWidth
-          && lineCount <= 2;
+          && lineCount <= maximumLines;
 
         if (fits) {
           best = size;
@@ -1512,7 +1528,7 @@
             });
           }
 
-          if (!isPromo && message.length > 40 && lineCount < 2) {
+          if (!isPromo && message.length > 32 && lineCount < 2) {
             unsplitLong.push(message);
           }
 
