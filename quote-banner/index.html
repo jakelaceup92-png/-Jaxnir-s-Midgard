@@ -1461,7 +1461,75 @@
       next: beginExit
     };
 
-    start();
+    function runLayoutAudit() {
+      const auditMessages = [...quotes, ...supportMessages, ...socialMessages];
+      const failures = [];
+      const unsplitLong = [];
+      let splitQuoteCount = 0;
+      let smallestFont = Number.POSITIVE_INFINITY;
+      let auditIndex = 0;
+
+      function auditStep() {
+        if (auditIndex >= auditMessages.length) {
+          document.documentElement.dataset.auditComplete = "true";
+          document.documentElement.dataset.auditFailures = JSON.stringify(failures);
+          document.documentElement.dataset.auditUnsplit = JSON.stringify(unsplitLong);
+          document.documentElement.dataset.auditSplitCount = String(splitQuoteCount);
+          document.documentElement.dataset.auditSmallestFont = String(smallestFont);
+          return;
+        }
+
+        const message = auditMessages[auditIndex];
+        auditIndex += 1;
+        currentMessage = message;
+        renderMessage(message);
+        quoteElement.classList.remove("is-exiting", "is-entering");
+        fitText();
+
+        requestAnimationFrame(() => {
+          const copy = quoteElement.querySelector(".message-copy");
+          const isPromo = quoteElement.classList.contains("is-promo");
+          const lineCount = copy ? copy.querySelectorAll(".message-line").length : 2;
+          const fitsX = quoteElement.scrollWidth <= quoteCell.clientWidth - 2;
+          const fitsY = quoteElement.scrollHeight <= quoteCell.clientHeight - 4;
+          const fontSize = Number.parseFloat(getComputedStyle(quoteElement).fontSize);
+
+          smallestFont = Math.min(smallestFont, fontSize);
+
+          if (!isPromo && lineCount === 2) {
+            splitQuoteCount += 1;
+          }
+
+          if (!fitsX || !fitsY) {
+            failures.push({
+              message,
+              fitsX,
+              fitsY,
+              scrollWidth: quoteElement.scrollWidth,
+              scrollHeight: quoteElement.scrollHeight,
+              cellWidth: quoteCell.clientWidth,
+              cellHeight: quoteCell.clientHeight
+            });
+          }
+
+          if (!isPromo && message.length > 40 && lineCount < 2) {
+            unsplitLong.push(message);
+          }
+
+          document.documentElement.dataset.auditProgress = String(auditIndex);
+          window.setTimeout(auditStep, 0);
+        });
+      }
+
+      auditStep();
+    }
+
+    if (query.has("audit")) {
+      clearTimer();
+      Promise.resolve(document.fonts ? document.fonts.ready : undefined).then(runLayoutAudit);
+    } else {
+      start();
+    }
   </script>
 </body>
 </html>
