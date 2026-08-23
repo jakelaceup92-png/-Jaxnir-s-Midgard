@@ -58,12 +58,13 @@
     .banner {
       position: absolute;
       top: 50%;
-      left: 0;
-      right: 0;
-      width: 100%;
-      height: clamp(160px, 24vh, 260px);
-      max-height: 100%;
-      transform: translateY(-50%);
+      left: 50%;
+      right: auto;
+      width: min(88vw, 108vh);
+      height: clamp(220px, 34vh, 620px);
+      max-width: 96%;
+      max-height: 96%;
+      transform: translate(-50%, -50%);
       display: grid;
       place-items: center;
       isolation: isolate;
@@ -213,7 +214,7 @@
       min-width: 0;
       display: grid;
       place-items: center;
-      padding: clamp(7px, 1.5vmin, 20px) clamp(22px, 4vw, 90px);
+      padding: clamp(12px, 2.4vmin, 32px) clamp(18px, 3vw, 52px);
       overflow: hidden;
     }
 
@@ -558,7 +559,9 @@
 
     @media (max-height: 420px) {
       .banner {
+        width: min(96vw, 340vh);
         height: 100%;
+        max-height: 100%;
       }
     }
 
@@ -1124,7 +1127,15 @@
       }
 
       quoteElement.style.fontSize = `${best}px`;
-      quoteElement.style.letterSpacing = `${Math.max(0.55, best * 0.075)}px`;
+      quoteElement.style.letterSpacing = `${letterSpacingFor(best)}px`;
+
+      // One final measurement after applying the winning size prevents a
+      // wider fallback letter-spacing value from clipping the last glyph.
+      if (quoteElement.scrollWidth > quoteCell.clientWidth || quoteElement.scrollHeight > quoteCell.clientHeight) {
+        const corrected = Math.max(minimum, best - 1);
+        quoteElement.style.fontSize = `${corrected}px`;
+        quoteElement.style.letterSpacing = `${letterSpacingFor(corrected)}px`;
+      }
     }
 
     function requestFit() {
