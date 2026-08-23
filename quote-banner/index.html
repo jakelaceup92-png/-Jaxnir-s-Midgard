@@ -45,7 +45,7 @@
       overflow: hidden;
       color: var(--ice);
       border: clamp(1px, 0.18vmin, 3px) solid rgba(50, 172, 255, 0.92);
-      border-radius: clamp(1px, 0.24vmin, 4px);
+      border-radius: 0;
       background:
         linear-gradient(90deg, rgba(12, 49, 82, 0.68), transparent 17%, transparent 83%, rgba(12, 49, 82, 0.68)),
         linear-gradient(180deg, rgba(11, 27, 45, 0.98), rgba(2, 7, 13, 0.99) 52%, rgba(5, 18, 31, 0.98));
@@ -79,7 +79,7 @@
       z-index: 5;
       pointer-events: none;
       border: 1px solid rgba(91, 193, 255, 0.3);
-      border-radius: 2px;
+      border-radius: 0;
       box-shadow:
         inset 0 0 10px rgba(29, 158, 239, 0.16),
         0 0 8px rgba(39, 170, 255, 0.12);
@@ -168,51 +168,138 @@
       transition: none;
     }
 
-    .sweep {
+    .perimeter-light {
       position: absolute;
-      left: -36%;
-      z-index: 6;
-      width: 32%;
-      height: 2px;
+      z-index: 7;
       pointer-events: none;
       opacity: 0;
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(38, 164, 244, 0.24),
-        rgba(151, 228, 255, 0.98),
-        rgba(38, 164, 244, 0.24),
+        rgba(42, 170, 255, 0.45),
+        rgba(193, 241, 255, 1),
+        rgba(42, 170, 255, 0.45),
         transparent
       );
-      filter:
-        drop-shadow(0 0 3px rgba(105, 212, 255, 0.9))
-        drop-shadow(0 0 8px rgba(20, 144, 236, 0.7));
-      animation: border-sweep 10s linear infinite;
+      box-shadow:
+        0 0 4px rgba(182, 239, 255, 1),
+        0 0 10px rgba(53, 185, 255, 0.96),
+        0 0 20px rgba(0, 116, 231, 0.72);
+      will-change: left, right, top, bottom, opacity;
     }
 
-    .sweep-top {
-      top: 1px;
+    .perimeter-top,
+    .perimeter-bottom {
+      width: clamp(72px, 14%, 260px);
+      height: clamp(2px, 0.2vmin, 4px);
     }
 
-    .sweep-bottom {
-      bottom: 1px;
-      animation-delay: -0.24s;
+    .perimeter-right,
+    .perimeter-left {
+      width: clamp(2px, 0.2vmin, 4px);
+      height: clamp(42px, 20%, 170px);
+      background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(42, 170, 255, 0.45),
+        rgba(193, 241, 255, 1),
+        rgba(42, 170, 255, 0.45),
+        transparent
+      );
     }
 
-    @keyframes border-sweep {
-      0%, 66% {
-        left: -36%;
+    .perimeter-top {
+      top: 0;
+      left: -16%;
+      animation: run-top 10s linear infinite;
+    }
+
+    .perimeter-right {
+      top: -22%;
+      right: 0;
+      animation: run-right 10s linear infinite;
+    }
+
+    .perimeter-bottom {
+      right: -16%;
+      bottom: 0;
+      animation: run-bottom 10s linear infinite;
+    }
+
+    .perimeter-left {
+      bottom: -22%;
+      left: 0;
+      animation: run-left 10s linear infinite;
+    }
+
+    @keyframes run-top {
+      0% {
+        left: -16%;
         opacity: 0;
       }
-      69% {
-        opacity: 0.95;
+      1.5% {
+        opacity: 1;
       }
-      88% {
-        left: 104%;
-        opacity: 0.95;
+      23.5% {
+        left: 100%;
+        opacity: 1;
       }
-      92%, 100% {
-        left: 104%;
+      25%, 100% {
+        left: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes run-right {
+      0%, 24% {
+        top: -22%;
+        opacity: 0;
+      }
+      25% {
+        opacity: 1;
+      }
+      48.5% {
+        top: 100%;
+        opacity: 1;
+      }
+      50%, 100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes run-bottom {
+      0%, 49% {
+        right: -16%;
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      73.5% {
+        right: 100%;
+        opacity: 1;
+      }
+      75%, 100% {
+        right: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes run-left {
+      0%, 74% {
+        bottom: -22%;
+        opacity: 0;
+      }
+      75% {
+        opacity: 1;
+      }
+      98.5% {
+        bottom: 100%;
+        opacity: 1;
+      }
+      100% {
+        bottom: 100%;
         opacity: 0;
       }
     }
@@ -276,7 +363,7 @@
       .banner,
       .banner::before,
       .rune-mark,
-      .sweep {
+      .perimeter-light {
         animation: none !important;
       }
 
@@ -306,8 +393,10 @@
     <div class="quote-cell">
       <p id="quote" class="quote" aria-live="polite"></p>
     </div>
-    <div class="sweep sweep-top" aria-hidden="true"></div>
-    <div class="sweep sweep-bottom" aria-hidden="true"></div>
+    <div class="perimeter-light perimeter-top" aria-hidden="true"></div>
+    <div class="perimeter-light perimeter-right" aria-hidden="true"></div>
+    <div class="perimeter-light perimeter-bottom" aria-hidden="true"></div>
+    <div class="perimeter-light perimeter-left" aria-hidden="true"></div>
   </main>
 
   <script>
