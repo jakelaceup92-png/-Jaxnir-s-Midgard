@@ -97,6 +97,18 @@
       place-items: center;
       pointer-events: none;
       overflow: hidden;
+      opacity: 1;
+      transform: scale(1);
+      transform-origin: center;
+      transition:
+        opacity 520ms ease,
+        transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    .rune-field.is-changing {
+      opacity: 0;
+      transform: scale(0.9);
     }
 
     .rune-mark {
@@ -104,7 +116,7 @@
       width: min(28%, 360px);
       min-width: 105px;
       overflow: visible;
-      opacity: 0.2;
+      opacity: 0.28;
       filter:
         drop-shadow(0 0 4px rgba(84, 199, 255, 0.92))
         drop-shadow(0 0 13px rgba(23, 145, 234, 0.82))
@@ -132,13 +144,45 @@
       stroke-width: 0.9;
       paint-order: stroke fill;
       font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", "Apple Symbols", serif;
-      font-size: 138px;
+      font-size: 108px;
       font-style: normal;
       font-weight: 400;
       letter-spacing: 0;
       dominant-baseline: middle;
     }
 
+
+
+    .rune-wheel {
+      opacity: 0.5;
+      transform-origin: 90px 90px;
+      animation: rune-wheel-turn 34s linear infinite;
+    }
+
+    .rune-wheel .wheel-ring {
+      fill: none;
+      stroke: rgba(104, 205, 255, 0.52);
+      stroke-width: 1.4;
+      stroke-dasharray: 2 8;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .rune-wheel .wheel-ring-inner {
+      fill: none;
+      stroke: rgba(157, 226, 255, 0.34);
+      stroke-width: 1;
+      stroke-dasharray: 18 5 3 5;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .wheel-text {
+      fill: rgba(157, 226, 255, 0.76);
+      stroke: none;
+      font-family: "Segoe UI Historic", "Noto Sans Runic", "Segoe UI Symbol", "Apple Symbols", serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 3px;
+    }
 
     .quote-cell {
       position: relative;
@@ -201,6 +245,54 @@
 
     .message-copy {
       display: inline;
+    }
+
+
+    .quote.is-promo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.15em;
+      text-align: left;
+    }
+
+    .quote.is-promo .message-emoji {
+      flex: 0 0 auto;
+      margin-right: 0.28em;
+      font-size: 0.68em;
+    }
+
+    .message-stack {
+      display: inline-flex;
+      min-width: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .message-headline {
+      display: block;
+      color: #f4fbff;
+      font-size: 1em;
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: 0.09em;
+      white-space: nowrap;
+    }
+
+    .message-detail {
+      display: block;
+      margin-top: 0.22em;
+      color: #9edcff;
+      font-size: 0.58em;
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.94),
+        0 0 8px rgba(50, 177, 255, 0.38);
     }
 
     .quote.is-exiting {
@@ -367,9 +459,18 @@
       }
     }
 
+    @keyframes rune-wheel-turn {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     @keyframes rune-breathe {
       0%, 100% {
-        opacity: 0.14;
+        opacity: 0.2;
         transform: scale(0.94) translateY(1.5%);
         filter:
           drop-shadow(0 0 3px rgba(84, 199, 255, 0.68))
@@ -377,7 +478,7 @@
           drop-shadow(0 0 22px rgba(0, 88, 180, 0.36));
       }
       50% {
-        opacity: 0.29;
+        opacity: 0.4;
         transform: scale(1.035) translateY(-1.5%);
         filter:
           drop-shadow(0 0 6px rgba(151, 228, 255, 1))
@@ -430,6 +531,7 @@
       .banner,
       .banner::before,
       .rune-mark,
+      .rune-wheel,
       .perimeter-light,
       .message-emoji {
         animation: none !important;
@@ -452,6 +554,7 @@
             <stop offset="0.45" stop-color="#56c8ff"/>
             <stop offset="1" stop-color="#0878d0"/>
           </linearGradient>
+          <path id="rune-ring-track" d="M90 15a75 75 0 1 1 0 150a75 75 0 1 1 0-150"/>
 
           <symbol id="rune-algiz" viewBox="0 0 180 180">
             <path d="M90 158V26M90 82L38 30M90 82l52-52M90 112l-39 39M90 112l39 39"/>
@@ -600,6 +703,13 @@
             <text class="traditional-glyph" x="90" y="94" text-anchor="middle">ᛟ</text>
           </symbol>
         </defs>
+        <g class="rune-wheel">
+          <circle class="wheel-ring" cx="90" cy="90" r="76"/>
+          <circle class="wheel-ring-inner" cx="90" cy="90" r="63"/>
+          <text class="wheel-text">
+            <textPath href="#rune-ring-track" startOffset="1%">ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛋ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛞ ᛟ</textPath>
+          </text>
+        </g>
         <g class="rune-active">
           <use id="rune-use" href="#rune-algiz"></use>
         </g>
@@ -721,21 +831,21 @@
     ];
 
     const supportMessages = [
-      "FOUND YOUR WAY TO MIDGARD? Follow Jaxnir and join the raid.",
-      "PRIME READY? Use your monthly Prime Gaming sub and become part of the legend.",
-      "ENJOYING THE CHAOS? Follow now so you never miss the next adventure.",
-      "HELP KEEP THE FIRES LIT. Every follow, cheer, and sub strengthens the Jaxnir community.",
-      "GAME FOR A GREATER CAUSE. Jaxnir proudly supports Extra Life.",
-      "HELP MAKE EVERY GAME COUNT. Support our Extra Life mission for children and families.",
-      "THE RAID IS STRONGER WITH YOU. Thank you for supporting Jaxnir.",
-      "READY TO JOIN THE CLAN? Follow, subscribe, and claim your place in Midgard."
+      "JOIN THE RAID|Follow Jaxnir and enter Midgard.",
+      "CLAIM YOUR PRIME SUB|Support the stream at no extra cost.",
+      "KEEP THE FIRES LIT|Every follow, cheer, and sub matters.",
+      "GAME FOR A GREATER CAUSE|Help Jaxnir support Extra Life.",
+      "MAKE EVERY GAME COUNT|Support children and families through Extra Life.",
+      "THE RAID IS STRONGER WITH YOU|Thank you for supporting Jaxnir.",
+      "ENTER MIDGARD|Follow now and never miss the next adventure.",
+      "JOIN THE CLAN|Follow, subscribe, and claim your place."
     ];
 
     const socialMessages = [
-      "THE RAID CONTINUES ON TWITCH  •  twitch.tv/Jaxnir",
-      "EPIC MOMENTS. ZERO CONTEXT.  •  youtube.com/@Jaxnir",
-      "QUICK CLIPS FROM MIDGARD  •  TikTok @Jaxnir",
-      "ENTER THE GREAT HALL  •  Join the Discord through the link below the stream"
+      "WATCH THE RAID LIVE|twitch.tv/Jaxnir",
+      "EPIC MOMENTS. ZERO CONTEXT.|youtube.com/@Jaxnir",
+      "CLIPS FROM MIDGARD|TikTok @Jaxnir",
+      "ENTER THE GREAT HALL|Discord link below the stream"
     ];
 
     const query = new URLSearchParams(window.location.search);
@@ -746,6 +856,7 @@
 
     const quoteElement = document.getElementById("quote");
     const quoteCell = document.querySelector(".quote-cell");
+    const runeField = document.querySelector(".rune-field");
     const runeUse = document.getElementById("rune-use");
     const runeSymbols = [
       "elder-fehu",
@@ -830,13 +941,32 @@
       emoji.setAttribute("aria-hidden", "true");
       emoji.textContent = emojiForMessage(message);
 
+      const parts = message.split("|");
+      const isPromo = parts.length === 2;
+      quoteElement.classList.toggle("is-promo", isPromo);
+
+      if (isPromo) {
+        const stack = document.createElement("span");
+        stack.className = "message-stack";
+
+        const headline = document.createElement("span");
+        headline.className = "message-headline";
+        headline.textContent = parts[0];
+
+        const detail = document.createElement("span");
+        detail.className = "message-detail";
+        detail.textContent = parts[1];
+
+        stack.append(headline, detail);
+        quoteElement.append(emoji, stack);
+        return;
+      }
+
       const copy = document.createElement("span");
       copy.className = "message-copy";
       copy.textContent = message;
-
       quoteElement.append(emoji, copy);
     }
-
 
     let quoteDeck = [];
     let deckIndex = 0;
@@ -955,6 +1085,7 @@
     function replaceMessage() {
       currentMessage = nextMessage();
       renderMessage(currentMessage);
+      requestAnimationFrame(() => runeField.classList.remove("is-changing"));
       quoteElement.classList.remove("is-exiting");
       quoteElement.classList.add("is-entering");
       fitText();
@@ -963,6 +1094,7 @@
     }
 
     function beginExit() {
+      runeField.classList.add("is-changing");
       quoteElement.classList.add("is-exiting");
       schedule(replaceMessage, TRANSITION_MS);
     }
@@ -971,6 +1103,7 @@
       clearTimer();
       refillDeck();
       currentMessage = nextMessage();
+      runeField.classList.remove("is-changing");
       renderMessage(currentMessage);
       quoteElement.classList.remove("is-exiting", "is-entering");
       fitText();
@@ -983,6 +1116,7 @@
     document.addEventListener("visibilitychange", () => {
       clearTimer();
       quoteElement.classList.remove("is-exiting", "is-entering");
+      runeField.classList.remove("is-changing");
       if (!document.hidden) {
         fitText();
         schedule(beginExit, DISPLAY_MS);
