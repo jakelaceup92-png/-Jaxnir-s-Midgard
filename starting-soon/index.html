@@ -13,12 +13,20 @@
       radial-gradient(ellipse at 76% 18%,rgba(49,130,190,.18),transparent 28%),
       radial-gradient(ellipse at 50% 90%,rgba(14,74,111,.25),transparent 42%),
       linear-gradient(180deg,#020813 0%,#041424 54%,#01060b 100%)}
+    .stars,.aurora{display:none}
     .stars,.stars:before,.stars:after{position:absolute;inset:-12%;content:"";pointer-events:none;background-repeat:repeat;mix-blend-mode:screen}
     .stars{opacity:.55;background-image:radial-gradient(circle,rgba(205,235,255,.85) 0 1px,transparent 1.5px);background-size:71px 71px;animation:starDrift 80s linear infinite}
     .stars:before{opacity:.36;background-image:radial-gradient(circle,rgba(119,201,255,.8) 0 1.2px,transparent 1.7px);background-size:113px 97px;animation:starDrift 120s linear reverse infinite}
     .stars:after{opacity:.26;background-image:radial-gradient(circle,rgba(255,255,255,.75) 0 1px,transparent 1.6px);background-size:157px 139px;animation:twinkle 7s ease-in-out infinite}
     .aurora{position:absolute;inset:-30% -10%;opacity:.22;filter:blur(45px);background:conic-gradient(from 140deg at 50% 60%,transparent 0 22%,rgba(25,135,213,.35) 29%,transparent 37% 61%,rgba(24,91,156,.28) 68%,transparent 78%);animation:aurora 24s ease-in-out infinite}
-    .world{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .world{display:none}
+    .photo{position:absolute;z-index:0;inset:-2%;background:#02070c url("midgard-owl.webp") center/cover no-repeat;filter:saturate(.94) contrast(1.04);animation:photoDrift 28s ease-in-out infinite}
+    .photo:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,rgba(0,0,0,.03) 0 27%,rgba(0,5,10,.28) 68%,rgba(0,3,7,.62) 100%),linear-gradient(180deg,rgba(0,7,15,.05),rgba(0,5,10,.18));pointer-events:none}
+    .cloud-motion{position:absolute;z-index:1;left:-20%;top:4%;width:140%;height:44%;opacity:.12;filter:blur(30px);background:radial-gradient(ellipse at 15% 45%,rgba(195,222,235,.35),transparent 24%),radial-gradient(ellipse at 55% 25%,rgba(173,209,227,.28),transparent 29%),radial-gradient(ellipse at 85% 52%,rgba(190,220,235,.3),transparent 25%);mix-blend-mode:screen;animation:realCloud 42s ease-in-out infinite}
+    .fog-bank{position:absolute;z-index:2;left:-15%;bottom:12%;width:130%;height:18%;opacity:.13;filter:blur(24px);background:radial-gradient(ellipse at 20% 55%,#b7d8e8,transparent 24%),radial-gradient(ellipse at 62% 62%,#91c1da,transparent 30%),radial-gradient(ellipse at 88% 45%,#c1deec,transparent 22%);mix-blend-mode:screen;animation:realFog 33s ease-in-out infinite}
+    .water-shimmer{position:absolute;z-index:2;left:38%;bottom:-2%;width:43%;height:27%;opacity:.18;filter:blur(1px);clip-path:polygon(30% 0,52% 0,100% 100%,0 100%);background:repeating-linear-gradient(168deg,transparent 0 17px,rgba(172,226,250,.4) 19px,transparent 23px);mix-blend-mode:screen;animation:realWater 6.5s linear infinite}
+    .torch-bloom{position:absolute;z-index:2;left:16.7%;top:68.4%;width:8.8vw;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,231,170,.62),rgba(255,130,44,.2) 28%,transparent 69%);filter:blur(5px);mix-blend-mode:screen;animation:realTorch 1.45s ease-in-out infinite}
+    .owl-eye{position:absolute;z-index:2;left:24.74%;top:11.42%;width:clamp(2px,.24vw,6px);aspect-ratio:1;border-radius:50%;background:#ffc266;box-shadow:0 0 5px #ff9d32;animation:owlBlink 11s steps(1,end) infinite}
     .cloud-a{animation:cloudA 48s ease-in-out infinite}.cloud-b{animation:cloudB 62s ease-in-out infinite}.cloud-c{animation:cloudC 78s ease-in-out infinite}
     .tree-left{transform-origin:135px 790px;animation:sway 11s ease-in-out infinite}.tree-right{transform-origin:1780px 840px;animation:sway 14s ease-in-out reverse infinite}
     .raven{transform-box:fill-box;transform-origin:center bottom;animation:ravenMove 13s ease-in-out infinite}.wing{transform-box:fill-box;transform-origin:75% 50%;animation:wing 13s ease-in-out infinite}
@@ -26,7 +34,8 @@
     .water-line{stroke-dasharray:20 28;animation:water 4.8s linear infinite}.water-line.slow{animation-duration:7s;animation-direction:reverse}
     .flame{transform-box:fill-box;transform-origin:center bottom;animation:flame 1.25s ease-in-out infinite}.torch-glow{animation:torchGlow 2.4s ease-in-out infinite}
     .rune-ring{transform-box:fill-box;transform-origin:center;animation:runeTurn 70s linear infinite}.rune-pulse{animation:runePulse 8s ease-in-out infinite}
-    .title-wrap{position:absolute;z-index:4;left:50%;top:48%;width:min(72vw,1400px);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:2vh 5vw}
+    .title-wrap{position:absolute;z-index:4;left:50%;top:48%;width:min(76vw,1460px);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:4.5vh 5vw}
+    .title-wrap:before{content:"";position:absolute;z-index:-1;inset:-12% -8%;background:radial-gradient(ellipse,rgba(0,7,13,.72),rgba(0,7,13,.25) 54%,transparent 76%);filter:blur(9px)}
     .brand{font-family:Copperplate,"Copperplate Gothic Bold",Georgia,serif;font-size:clamp(18px,1.55vw,36px);font-weight:700;letter-spacing:.42em;margin-right:-.42em;color:#9dcbea;text-shadow:0 0 14px rgba(52,168,255,.55);animation:brandGlow 6s ease-in-out infinite}
     .kicker{margin-top:2.1vh;font-family:Arial,sans-serif;font-size:clamp(11px,.75vw,18px);font-weight:800;font-style:italic;letter-spacing:.55em;margin-right:-.55em;color:#5fb8f5}
     h1{margin:.4vh 0 0;white-space:nowrap;font-family:Copperplate,"Copperplate Gothic Bold","Palatino Linotype",Georgia,serif;font-size:clamp(50px,7vw,150px);font-weight:900;line-height:.88;letter-spacing:.055em;margin-right:-.055em;color:#e9f8ff;-webkit-text-stroke:clamp(1px,.11vw,2.2px) rgba(90,162,205,.72);text-shadow:0 3px 0 #2d5a75,0 7px 0 rgba(0,0,0,.66),0 0 20px rgba(99,192,255,.54),0 0 58px rgba(30,115,181,.32);animation:titleBreathe 7s ease-in-out infinite}
@@ -42,6 +51,7 @@
     .scan{position:absolute;z-index:10;inset:clamp(10px,.8vw,24px);pointer-events:none;filter:drop-shadow(0 0 8px #48bdff)}
     .scan rect{fill:none;stroke:#dff8ff;stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:5 495;animation:borderTravel 12s linear infinite}
     .corner{position:absolute;z-index:10;width:2.8vw;height:2.8vw;min-width:24px;min-height:24px;border-color:#7dd2ff;filter:drop-shadow(0 0 5px rgba(68,186,255,.7));pointer-events:none}.tl{left:1.1vw;top:1.1vw;border-left:2px solid;border-top:2px solid}.tr{right:1.1vw;top:1.1vw;border-right:2px solid;border-top:2px solid}.bl{left:1.1vw;bottom:1.1vw;border-left:2px solid;border-bottom:2px solid}.br{right:1.1vw;bottom:1.1vw;border-right:2px solid;border-bottom:2px solid}
+    @keyframes photoDrift{0%,100%{transform:scale(1.015) translate3d(0,0,0)}50%{transform:scale(1.035) translate3d(-.35%,.25%,0)}}@keyframes realCloud{50%{transform:translateX(9%);opacity:.18}}@keyframes realFog{50%{transform:translateX(7%);opacity:.18}}@keyframes realWater{to{background-position:0 92px}}@keyframes realTorch{50%{transform:scale(1.12);opacity:.74}}@keyframes owlBlink{0%,45%,48%,100%{opacity:.62}46%,47%{opacity:.05}}
     @keyframes starDrift{to{transform:translate3d(5%,3%,0)}}@keyframes twinkle{50%{opacity:.7}}@keyframes aurora{50%{transform:translate3d(3%,-2%,0) rotate(3deg);opacity:.3}}
     @keyframes cloudA{50%{transform:translateX(120px)}}@keyframes cloudB{50%{transform:translateX(-150px)}}@keyframes cloudC{50%{transform:translateX(80px)}}
     @keyframes sway{50%{transform:rotate(.75deg)}}@keyframes ravenMove{0%,70%,100%{transform:translateY(0) rotate(0)}75%{transform:translateY(-5px) rotate(-2deg)}82%{transform:translateY(0) rotate(1deg)}}@keyframes wing{0%,70%,86%,100%{transform:rotate(0)}75%{transform:rotate(-20deg)}81%{transform:rotate(8deg)}}
@@ -53,7 +63,7 @@
 </head>
 <body>
 <main class="stage" aria-label="Jaxnir stream starting soon screen">
-  <div class="stars"></div><div class="aurora"></div>
+  <div class="stars"></div><div class="aurora"></div><div class="photo"></div><div class="cloud-motion"></div><div class="fog-bank"></div><div class="water-shimmer"></div><div class="torch-bloom"></div><div class="owl-eye"></div>
   <svg class="world" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <radialGradient id="moon" cx="38%" cy="35%"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#d6eef8"/><stop offset="1" stop-color="#7ba3b9"/></radialGradient>
