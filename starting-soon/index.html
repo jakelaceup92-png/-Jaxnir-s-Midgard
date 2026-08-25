@@ -59,13 +59,10 @@
     @keyframes runeTurn{to{transform:rotate(360deg)}}@keyframes runePulse{50%{opacity:.34;filter:drop-shadow(0 0 12px #3fb7ff)}}@keyframes titleBreathe{50%{transform:scale(1.012);text-shadow:0 3px 0 #2d5a75,0 7px 0 rgba(0,0,0,.66),0 0 28px rgba(99,192,255,.72),0 0 75px rgba(30,115,181,.4)}}@keyframes brandGlow{50%{color:#e3f7ff}}@keyframes borderPulse{50%{border-color:rgba(103,205,255,.9)}}@keyframes borderTravel{to{stroke-dashoffset:-500}}
     @media(max-aspect-ratio:4/3){.title-wrap{width:84vw}.socials{gap:1.4vw}.social{gap:.35rem}.tagline{letter-spacing:.13em;margin-right:-.13em}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-delay:0s!important}}
-    /* Clean, seamless background: keep the original artwork and layer only subtle motion. */
-    .scene-video{display:none!important}
-    .photo,.fog-bank,.water-shimmer,.torch-bloom,.owl-eye{display:block!important}
-    .cloud-motion,.world{display:none!important}
-
-    /* Keep the full title treatment visible for the entire scene. */
-    .title-wrap{opacity:1;transform:translate(-50%,-50%)}
+    .scene-video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;background:#02070c;filter:saturate(.97) contrast(1.03);transform:translateZ(0)}
+    .photo,.cloud-motion,.fog-bank,.water-shimmer,.torch-bloom,.owl-eye,.world{display:none!important}
+    .title-wrap{animation:titleCycle 30s ease-in-out infinite}
+    @keyframes titleCycle{0%{opacity:0;transform:translate(-50%,calc(-50% + 8px))}2%,16%{opacity:1;transform:translate(-50%,-50%)}18%,100%{opacity:0;transform:translate(-50%,calc(-50% - 8px))}}
   </style>
 </head>
 <body>
