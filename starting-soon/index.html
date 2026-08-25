@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Jaxnir — Stream Starting Soon</title>
+  <style>
+    :root{--ice:#dff6ff;--blue:#38a9ff;--deep:#03111f;--steel:#8fb8cf;--ember:#ff9a45}
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#01060c}
+    body{font-family:Georgia,"Times New Roman",serif;color:var(--ice)}
+    .stage{position:absolute;inset:0;isolation:isolate;overflow:hidden;background:
+      radial-gradient(ellipse at 76% 18%,rgba(49,130,190,.18),transparent 28%),
+      radial-gradient(ellipse at 50% 90%,rgba(14,74,111,.25),transparent 42%),
+      linear-gradient(180deg,#020813 0%,#041424 54%,#01060b 100%)}
+    .stars,.stars:before,.stars:after{position:absolute;inset:-12%;content:"";pointer-events:none;background-repeat:repeat;mix-blend-mode:screen}
+    .stars{opacity:.55;background-image:radial-gradient(circle,rgba(205,235,255,.85) 0 1px,transparent 1.5px);background-size:71px 71px;animation:starDrift 80s linear infinite}
+    .stars:before{opacity:.36;background-image:radial-gradient(circle,rgba(119,201,255,.8) 0 1.2px,transparent 1.7px);background-size:113px 97px;animation:starDrift 120s linear reverse infinite}
+    .stars:after{opacity:.26;background-image:radial-gradient(circle,rgba(255,255,255,.75) 0 1px,transparent 1.6px);background-size:157px 139px;animation:twinkle 7s ease-in-out infinite}
+    .aurora{position:absolute;inset:-30% -10%;opacity:.22;filter:blur(45px);background:conic-gradient(from 140deg at 50% 60%,transparent 0 22%,rgba(25,135,213,.35) 29%,transparent 37% 61%,rgba(24,91,156,.28) 68%,transparent 78%);animation:aurora 24s ease-in-out infinite}
+    .world{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .cloud-a{animation:cloudA 48s ease-in-out infinite}.cloud-b{animation:cloudB 62s ease-in-out infinite}.cloud-c{animation:cloudC 78s ease-in-out infinite}
+    .tree-left{transform-origin:135px 790px;animation:sway 11s ease-in-out infinite}.tree-right{transform-origin:1780px 840px;animation:sway 14s ease-in-out reverse infinite}
+    .raven{transform-box:fill-box;transform-origin:center bottom;animation:ravenMove 13s ease-in-out infinite}.wing{transform-box:fill-box;transform-origin:75% 50%;animation:wing 13s ease-in-out infinite}
+    .mist{animation:mist 36s ease-in-out infinite}.mist.slow{animation-duration:54s;animation-direction:reverse}
+    .water-line{stroke-dasharray:20 28;animation:water 4.8s linear infinite}.water-line.slow{animation-duration:7s;animation-direction:reverse}
+    .flame{transform-box:fill-box;transform-origin:center bottom;animation:flame 1.25s ease-in-out infinite}.torch-glow{animation:torchGlow 2.4s ease-in-out infinite}
+    .rune-ring{transform-box:fill-box;transform-origin:center;animation:runeTurn 70s linear infinite}.rune-pulse{animation:runePulse 8s ease-in-out infinite}
+    .title-wrap{position:absolute;z-index:4;left:50%;top:48%;width:min(72vw,1400px);transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:2vh 5vw}
+    .brand{font-family:Copperplate,"Copperplate Gothic Bold",Georgia,serif;font-size:clamp(18px,1.55vw,36px);font-weight:700;letter-spacing:.42em;margin-right:-.42em;color:#9dcbea;text-shadow:0 0 14px rgba(52,168,255,.55);animation:brandGlow 6s ease-in-out infinite}
+    .kicker{margin-top:2.1vh;font-family:Arial,sans-serif;font-size:clamp(11px,.75vw,18px);font-weight:800;font-style:italic;letter-spacing:.55em;margin-right:-.55em;color:#5fb8f5}
+    h1{margin:.4vh 0 0;font-family:Copperplate,"Copperplate Gothic Bold","Palatino Linotype",Georgia,serif;font-size:clamp(50px,7vw,150px);font-weight:900;line-height:.88;letter-spacing:.055em;margin-right:-.055em;color:#e9f8ff;-webkit-text-stroke:clamp(1px,.11vw,2.2px) rgba(90,162,205,.72);text-shadow:0 3px 0 #2d5a75,0 7px 0 rgba(0,0,0,.66),0 0 20px rgba(99,192,255,.54),0 0 58px rgba(30,115,181,.32);animation:titleBreathe 7s ease-in-out infinite}
+    .divider{display:flex;align-items:center;gap:1.2rem;width:min(74%,850px);margin:2.4vh 0 1.8vh;color:#4db4fb}
+    .divider:before,.divider:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,currentColor)}
+    .divider:after{transform:scaleX(-1)}
+    .diamond{width:10px;height:10px;border:1px solid currentColor;transform:rotate(45deg);box-shadow:0 0 10px currentColor}
+    .tagline{font-family:"Palatino Linotype",Georgia,serif;font-size:clamp(13px,1.12vw,25px);font-weight:700;letter-spacing:.22em;margin-right:-.22em;color:#c4e1ef;text-shadow:0 2px 8px #000}
+    .socials{position:absolute;z-index:5;left:50%;bottom:4.1vh;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:clamp(18px,2.4vw,54px);white-space:nowrap;color:#9ec6db;font-family:Arial,sans-serif;font-size:clamp(9px,.72vw,16px);font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+    .social{display:flex;align-items:center;gap:.55rem}.social b{color:#ecfaff;font-weight:800}.sigil{width:1.25em;height:1.25em;display:grid;place-items:center;border:1px solid #4188b6;transform:rotate(45deg);box-shadow:0 0 10px rgba(53,164,237,.32)}.sigil i{font-style:normal;transform:rotate(-45deg);font-size:.72em;color:#84d1ff}
+    .frame{position:absolute;z-index:9;inset:clamp(8px,.65vw,20px);pointer-events:none;border:1px solid rgba(102,159,191,.55);box-shadow:inset 0 0 18px rgba(0,0,0,.8),0 0 12px rgba(16,126,202,.18);clip-path:polygon(0 16px,16px 0,calc(100% - 16px) 0,100% 16px,100% calc(100% - 16px),calc(100% - 16px) 100%,16px 100%,0 calc(100% - 16px))}
+    .frame:before{content:"";position:absolute;inset:2px;border:2px solid rgba(29,161,244,.55);filter:drop-shadow(0 0 6px rgba(31,164,249,.6));animation:borderPulse 5s ease-in-out infinite}
+    .scan{position:absolute;z-index:10;inset:clamp(10px,.8vw,24px);pointer-events:none;filter:drop-shadow(0 0 8px #48bdff)}
+    .scan rect{fill:none;stroke:#dff8ff;stroke-width:2;stroke-linecap:round;stroke-dasharray:5 495;animation:borderTravel 12s linear infinite}
+    .corner{position:absolute;z-index:10;width:2.8vw;height:2.8vw;min-width:24px;min-height:24px;border-color:#7dd2ff;filter:drop-shadow(0 0 5px rgba(68,186,255,.7));pointer-events:none}.tl{left:1.1vw;top:1.1vw;border-left:2px solid;border-top:2px solid}.tr{right:1.1vw;top:1.1vw;border-right:2px solid;border-top:2px solid}.bl{left:1.1vw;bottom:1.1vw;border-left:2px solid;border-bottom:2px solid}.br{right:1.1vw;bottom:1.1vw;border-right:2px solid;border-bottom:2px solid}
+    @keyframes starDrift{to{transform:translate3d(5%,3%,0)}}@keyframes twinkle{50%{opacity:.7}}@keyframes aurora{50%{transform:translate3d(3%,-2%,0) rotate(3deg);opacity:.3}}
+    @keyframes cloudA{50%{transform:translateX(120px)}}@keyframes cloudB{50%{transform:translateX(-150px)}}@keyframes cloudC{50%{transform:translateX(80px)}}
+    @keyframes sway{50%{transform:rotate(.75deg)}}@keyframes ravenMove{0%,70%,100%{transform:translateY(0) rotate(0)}75%{transform:translateY(-5px) rotate(-2deg)}82%{transform:translateY(0) rotate(1deg)}}@keyframes wing{0%,70%,86%,100%{transform:rotate(0)}75%{transform:rotate(-20deg)}81%{transform:rotate(8deg)}}
+    @keyframes mist{50%{transform:translateX(170px);opacity:.45}}@keyframes water{to{stroke-dashoffset:-96}}@keyframes flame{50%{transform:scale(.82,1.12) rotate(2deg)}}@keyframes torchGlow{50%{opacity:.72;transform:scale(1.12)}}
+    @keyframes runeTurn{to{transform:rotate(360deg)}}@keyframes runePulse{50%{opacity:.34;filter:drop-shadow(0 0 12px #3fb7ff)}}@keyframes titleBreathe{50%{transform:scale(1.012);text-shadow:0 3px 0 #2d5a75,0 7px 0 rgba(0,0,0,.66),0 0 28px rgba(99,192,255,.72),0 0 75px rgba(30,115,181,.4)}}@keyframes brandGlow{50%{color:#e3f7ff}}@keyframes borderPulse{50%{border-color:rgba(103,205,255,.9)}}@keyframes borderTravel{to{stroke-dashoffset:-500}}
+    @media(max-aspect-ratio:4/3){.title-wrap{width:84vw}.socials{gap:1.4vw}.social{gap:.35rem}.tagline{letter-spacing:.13em;margin-right:-.13em}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-delay:0s!important}}
+  </style>
+</head>
+<body>
+<main class="stage" aria-label="Jaxnir stream starting soon screen">
+  <div class="stars"></div><div class="aurora"></div>
+  <svg class="world" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="moon" cx="38%" cy="35%"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#d6eef8"/><stop offset="1" stop-color="#7ba3b9"/></radialGradient>
+      <linearGradient id="mount" x2="0" y2="1"><stop stop-color="#102e43"/><stop offset="1" stop-color="#02070c"/></linearGradient>
+      <linearGradient id="river" x2="1"><stop stop-color="#1f668e" stop-opacity="0"/><stop offset=".45" stop-color="#72c9f7" stop-opacity=".6"/><stop offset="1" stop-color="#174c6a" stop-opacity="0"/></linearGradient>
+      <radialGradient id="fire"><stop stop-color="#ffd98f"/><stop offset=".42" stop-color="#ff8f32"/><stop offset="1" stop-color="#8c2308"/></radialGradient>
+      <filter id="blur18"><feGaussianBlur stdDeviation="18"/></filter><filter id="blur35"><feGaussianBlur stdDeviation="35"/></filter><filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g opacity=".24" fill="#779db6" filter="url(#blur18)"><path class="cloud-a" d="M-130 220 Q170 75 465 215 T1000 190 T1540 205 T2110 120 V330 H-130Z"/><path class="cloud-b" d="M-80 375 Q235 250 560 355 T1160 320 T2010 300 V445 H-80Z" opacity=".55"/><path class="cloud-c" d="M350 80 Q630 -30 910 105 T1480 100 T2030 55 V175 H350Z" opacity=".4"/></g>
+    <g transform="translate(1515 210)"><circle r="190" fill="#4da8dd" opacity=".13" filter="url(#blur35)"/><circle r="121" fill="url(#moon)" opacity=".93"/><path d="M-76-36q32-56 76-61 44 12 70 48-45-20-80 0-36 18-66 13m-8 82q44 50 104 28 26-9 45-31-17 50-66 62-54 9-93-29z" fill="#88aebf" opacity=".16"/></g>
+    <g class="rune-pulse" opacity=".2" stroke="#4cb7f2" fill="none" stroke-width="3">
+      <circle cx="1515" cy="210" r="168" stroke-dasharray="2 13"/><g class="rune-ring" transform="translate(1515 210)"><path d="M0-170v34m0 272v34M-170 0h34m272 0h34M-120-120l24 24m192 192 24 24M120-120L96-96M-96 96l-24 24"/><path d="M-12-146l12-18 12 18m-154 81-22 5 14 18m284-23 22 5-14 18M-12 146l12 18 12-18"/></g>
+    </g>
+    <g opacity=".16" stroke="#4eb8ef" fill="none" filter="url(#glow)">
+      <path d="M460 470 C360 416 342 324 398 262 C421 348 492 372 516 307 C546 387 526 437 460 470Z" stroke-width="5"/>
+      <path d="M455 470v238M455 515c-78-30-127-10-170 44m172 20c86-45 141-32 194 27M454 620c-61 7-93 47-118 93m122-34c62-6 106 27 137 76" stroke-width="8"/>
+      <circle cx="455" cy="511" r="174" stroke-width="2" stroke-dasharray="3 15"/>
+    </g>
+    <path d="M0 695L122 583 225 642 374 510 500 632 675 493 818 627 987 475 1130 610 1264 500 1405 618 1570 430 1722 585 1920 463V1080H0Z" fill="url(#mount)" opacity=".88"/>
+    <path d="M0 752L165 641 312 729 475 590 625 735 795 624 945 731 1110 610 1275 745 1450 588 1605 715 1780 565 1920 680V1080H0Z" fill="#020910" opacity=".96"/>
+    <path d="M840 712 C1000 760 1126 777 1280 795 C1434 814 1608 848 1920 1016 L1920 1080 760 1080 C902 952 934 855 840 712Z" fill="#071925" opacity=".88"/>
+    <path d="M860 755 C1085 805 1390 833 1888 1035" stroke="url(#river)" stroke-width="92" fill="none" opacity=".45"/>
+    <path class="water-line" d="M868 761 C1100 810 1390 845 1880 1037" stroke="#7dd1ff" stroke-width="4" fill="none" opacity=".58"/><path class="water-line slow" d="M890 785 C1140 825 1440 870 1860 1050" stroke="#d1f3ff" stroke-width="2" fill="none" opacity=".34"/>
+    <g class="tree-left" fill="#010407"><path d="M0 1080V350l58 148 30-177 34 170 52-225 35 252 64-132 0 694z"/><path d="M70 780l-20-400m58 422 12-460m40 501 35-500" stroke="#06111a" stroke-width="28"/></g>
+    <g class="tree-right" fill="#010407"><path d="M1920 1080V330l-70 176-28-207-52 218-46-163-42 252-80-188v662z"/><path d="M1853 840l18-472m-77 438-11-435m-58 500-25-420" stroke="#06111a" stroke-width="30"/></g>
+    <g transform="translate(270 835)"><path d="M-50 50Q210-10 560 58" stroke="#09141b" stroke-width="28" fill="none" stroke-linecap="round"/><g class="raven" transform="translate(290 -16)" fill="#010205"><path d="M0 41q21-44 55-25 19 10 15 33-22-3-37 15L5 58Z"/><path class="wing" d="M28 25Q-5-22-78-14q42 18 69 58Z"/><path d="M65 21l28 9-28 6Z"/><circle cx="57" cy="23" r="2" fill="#77d3ff"/></g></g>
+    <g transform="translate(290 870)"><circle class="torch-glow" cx="0" cy="0" r="74" fill="#ff7c25" opacity=".18" filter="url(#blur18)"/><path d="M-8 20l16 0 6 135h-28z" fill="#29150d"/><path class="flame" d="M0 22C-28-9 1-35 8-65c17 28 34 53 6 86-5 7-10 8-14 1z" fill="url(#fire)" filter="url(#glow)"/></g>
+    <g class="mist" fill="#75b9dc" opacity=".19" filter="url(#blur35)"><ellipse cx="330" cy="765" rx="380" ry="44"/><ellipse cx="970" cy="812" rx="480" ry="48"/></g><g class="mist slow" fill="#a4d1e6" opacity=".12" filter="url(#blur35)"><ellipse cx="1490" cy="715" rx="520" ry="52"/></g>
+  </svg>
+  <section class="title-wrap">
+    <div class="brand">JAXNIR · MIDGARD</div>
+    <div class="kicker">STREAM</div>
+    <h1>STARTING SOON</h1>
+    <div class="divider"><span class="diamond"></span></div>
+    <div class="tagline">PREPARE YOURSELF — THE STORM IS COMING</div>
+  </section>
+  <div class="socials" aria-label="Jaxnir social links">
+    <span class="social"><span class="sigil"><i>T</i></span><b>TWITCH</b> JAXNIR</span>
+    <span class="social"><span class="sigil"><i>Y</i></span><b>YOUTUBE</b> @JAXNIR</span>
+    <span class="social"><span class="sigil"><i>K</i></span><b>TIKTOK</b> @JAXNIR</span>
+    <span class="social"><span class="sigil"><i>D</i></span><b>DISCORD</b> LINK BELOW</span>
+  </div>
+  <div class="frame"></div><svg class="scan" viewBox="0 0 100 100" preserveAspectRatio="none"><rect x=".5" y=".5" width="99" height="99" pathLength="500"/></svg>
+  <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+</main>
+</body>
+</html>
