@@ -59,10 +59,15 @@
     @keyframes runeTurn{to{transform:rotate(360deg)}}@keyframes runePulse{50%{opacity:.34;filter:drop-shadow(0 0 12px #3fb7ff)}}@keyframes titleBreathe{50%{transform:scale(1.012);text-shadow:0 3px 0 #2d5a75,0 7px 0 rgba(0,0,0,.66),0 0 28px rgba(99,192,255,.72),0 0 75px rgba(30,115,181,.4)}}@keyframes brandGlow{50%{color:#e3f7ff}}@keyframes borderPulse{50%{border-color:rgba(103,205,255,.9)}}@keyframes borderTravel{to{stroke-dashoffset:-500}}
     @media(max-aspect-ratio:4/3){.title-wrap{width:84vw}.socials{gap:1.4vw}.social{gap:.35rem}.tagline{letter-spacing:.13em;margin-right:-.13em}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:1ms!important;animation-delay:0s!important}}
+    .scene-video{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:cover;background:#02070c;filter:saturate(.97) contrast(1.03);transform:translateZ(0)}
+    .photo,.cloud-motion,.fog-bank,.water-shimmer,.torch-bloom,.owl-eye,.world{display:none!important}
+    .title-wrap{animation:titleCycle 30s ease-in-out infinite}
+    @keyframes titleCycle{0%{opacity:0;transform:translate(-50%,calc(-50% + 8px))}2%,16%{opacity:1;transform:translate(-50%,-50%)}18%,100%{opacity:0;transform:translate(-50%,calc(-50% - 8px))}}
   </style>
 </head>
 <body>
 <main class="stage" aria-label="Jaxnir stream starting soon screen">
+  <video class="scene-video" autoplay muted loop playsinline preload="auto" poster="midgard-owl.webp" aria-hidden="true"><source src="midgard-starting-soon-horizontal-1920x1080.mp4" type="video/mp4"></video>
   <div class="stars"></div><div class="aurora"></div><div class="photo"></div><div class="cloud-motion"></div><div class="fog-bank"></div><div class="water-shimmer"></div><div class="torch-bloom"></div><div class="owl-eye"></div>
   <svg class="world" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
@@ -109,5 +114,8 @@
   <div class="frame"></div><svg class="scan" viewBox="0 0 100 100" preserveAspectRatio="none"><rect x=".5" y=".5" width="99" height="99" pathLength="500"/></svg>
   <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
 </main>
+<script>
+  (()=>{const video=document.querySelector('.scene-video');const resume=()=>{if(document.visibilityState==='visible')video.play().catch(()=>{})};document.addEventListener('visibilitychange',resume,{passive:true});window.addEventListener('focus',resume,{passive:true});video.addEventListener('stalled',resume,{passive:true});resume()})()
+</script>
 </body>
 </html>
