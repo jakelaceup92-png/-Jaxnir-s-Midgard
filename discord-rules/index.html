@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050914">
+  <title>Rules of the Hall | Jaxnir</title>
+  <meta name="description" content="The community rules for Jaxnir's Hall.">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #03060d;
+      --panel: rgba(8, 16, 31, 0.82);
+      --panel-strong: rgba(10, 22, 42, 0.96);
+      --line: rgba(66, 205, 255, 0.28);
+      --cyan: #43d8ff;
+      --blue: #477bff;
+      --violet: #9a72ff;
+      --text: #f5f8ff;
+      --muted: #aebbd0;
+      --danger: #ff7085;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(67, 216, 255, 0.15), transparent 26rem),
+        radial-gradient(circle at 88% 24%, rgba(154, 114, 255, 0.12), transparent 24rem),
+        radial-gradient(circle at 50% 100%, rgba(71, 123, 255, 0.10), transparent 32rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 64px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 7vw, 70px) clamp(24px, 7vw, 72px);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: linear-gradient(145deg, rgba(11, 24, 46, 0.96), rgba(5, 10, 21, 0.9));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255,255,255,0.06);
+      animation: edge-pulse 5.5s ease-in-out infinite;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(110deg, transparent 15%, rgba(67,216,255,0.82) 36%, rgba(154,114,255,0.64) 50%, transparent 72%);
+      background-size: 300% 100%;
+      animation: edge-sweep 7s linear infinite;
+      opacity: 0.42;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1px;
+      border-radius: inherit;
+    }
+
+    .hero::after {
+      content: "ᚷ ᛉ ᛏ ᛟ ᚱ ᛉ ᚷ";
+      position: absolute;
+      right: -24px;
+      bottom: -26px;
+      color: rgba(67, 216, 255, 0.07);
+      font-family: Georgia, serif;
+      font-size: clamp(74px, 13vw, 150px);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      transform: rotate(-4deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 14px;
+      color: var(--cyan);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan));
+      box-shadow: 0 0 12px var(--cyan);
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 8vw, 5.6rem);
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--cyan);
+      text-shadow: 0 0 28px rgba(67, 216, 255, 0.34);
+    }
+
+    .intro {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+    }
+
+    .badges {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .badge {
+      padding: 7px 12px;
+      border: 1px solid rgba(67, 216, 255, 0.22);
+      border-radius: 999px;
+      color: #dcefff;
+      background: rgba(67, 216, 255, 0.07);
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .rune-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 34px 0;
+      color: var(--cyan);
+      font-family: Georgia, serif;
+      letter-spacing: 0.35em;
+    }
+
+    .rune-divider::before,
+    .rune-divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, transparent, var(--line));
+    }
+
+    .rune-divider::after { transform: rotate(180deg); }
+
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .rule {
+      position: relative;
+      min-height: 190px;
+      padding: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(124, 185, 255, 0.16);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, var(--panel-strong), var(--panel));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      animation: card-edge-pulse 7s ease-in-out infinite;
+    }
+
+    .rule:nth-child(2n) { animation-delay: -2.6s; }
+    .rule:nth-child(3n) { animation-delay: -4.8s; }
+
+    .rule:hover {
+      transform: translateY(-3px);
+      border-color: rgba(67, 216, 255, 0.42);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28), 0 0 30px rgba(67, 216, 255, 0.06);
+    }
+
+    .rule::after {
+      content: attr(data-rune);
+      position: absolute;
+      right: 14px;
+      bottom: -26px;
+      color: rgba(67, 216, 255, 0.055);
+      font-family: Georgia, serif;
+      font-size: 100px;
+      line-height: 1;
+    }
+
+    .rule-number {
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .rule h2 {
+      position: relative;
+      z-index: 1;
+      margin: 9px 0 8px;
+      font-size: 1.18rem;
+      line-height: 1.25;
+    }
+
+    .rule p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .wide { grid-column: 1 / -1; min-height: 0; }
+
+    .rooms {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .room {
+      padding: 20px;
+      border: 1px solid rgba(154, 114, 255, 0.2);
+      border-radius: 14px;
+      background: rgba(154, 114, 255, 0.055);
+    }
+
+    .room strong { display: block; margin-bottom: 4px; color: #ebe4ff; }
+    .room span { color: var(--muted); }
+
+    .oath {
+      position: relative;
+      margin-top: 32px;
+      padding: 28px;
+      border: 1px solid rgba(67, 216, 255, 0.34);
+      border-radius: var(--radius);
+      text-align: center;
+      background: linear-gradient(90deg, rgba(67, 216, 255, 0.08), rgba(154, 114, 255, 0.07));
+      box-shadow: 0 0 50px rgba(67, 216, 255, 0.06);
+      animation: edge-pulse 6.5s ease-in-out infinite reverse;
+    }
+
+    @keyframes edge-sweep {
+      from { background-position: 150% 0; }
+      to { background-position: -150% 0; }
+    }
+
+    @keyframes edge-pulse {
+      0%, 100% {
+        border-color: rgba(67, 216, 255, 0.24);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48), 0 0 8px rgba(67, 216, 255, 0.04), inset 0 1px 0 rgba(255,255,255,0.06);
+      }
+      50% {
+        border-color: rgba(67, 216, 255, 0.52);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48), 0 0 28px rgba(67, 216, 255, 0.14), inset 0 1px 0 rgba(255,255,255,0.06);
+      }
+    }
+
+    @keyframes card-edge-pulse {
+      0%, 100% {
+        border-color: rgba(124, 185, 255, 0.16);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 0 0 rgba(67,216,255,0);
+      }
+      50% {
+        border-color: rgba(67, 216, 255, 0.34);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 0 20px rgba(67,216,255,0.08);
+      }
+    }
+
+    .oath h2 { margin: 0 0 8px; font-family: Georgia, serif; font-size: 1.5rem; }
+    .oath p { margin: 0; color: var(--muted); }
+
+    footer {
+      padding: 30px 8px 0;
+      color: #78879f;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 20px, 1080px); padding-top: 10px; }
+      .hero { border-radius: 18px; }
+      .rules, .rooms { grid-template-columns: 1fr; }
+      .wide { grid-column: auto; }
+      .rule { min-height: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero, .hero::before, .rule, .oath { animation: none; }
+      .rule { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Jaxnir’s Hall</p>
+      <h1>Rules of <span>the Hall</span></h1>
+      <p class="intro">Unfiltered conversation, dark humor, loud games, questionable decisions, and good people. Speak freely, take a joke, and keep the chaos worth coming back to.</p>
+      <div class="badges" aria-label="Community expectations">
+        <span class="badge">🔞 R-rated atmosphere</span>
+        <span class="badge">🗣️ Speak freely</span>
+        <span class="badge">⚡ Controlled chaos</span>
+      </div>
+    </header>
+
+    <div class="rune-divider" aria-hidden="true">ᚷ ᛉ ᛏ</div>
+
+    <section class="rules" aria-label="Server rules">
+      <article class="rule" data-rune="ᛉ">
+        <span class="rule-number">Rule 01</span>
+        <h2>🗣️ Speak freely. Own the impact.</h2>
+        <p>This is not a family-friendly server. Swearing, strong opinions, arguments, trash talk, and offensive jokes are allowed. You are free to speak—but nobody is entitled to relentlessly target, stalk, threaten, or dogpile another member.</p>
+      </article>
+
+      <article class="rule" data-rune="ᚱ">
+        <span class="rule-number">Rule 02</span>
+        <h2>😂 R-rated humor is welcome</h2>
+        <p>Dark, crude, and politically incorrect humor is part of the Hall. Context matters. Jokes are not the same as credible threats, targeted harassment, or trying to make one person miserable every time they show up.</p>
+      </article>
+
+      <article class="rule" data-rune="ᛏ">
+        <span class="rule-number">Rule 03</span>
+        <h2>🎮 Keep the Hall organized</h2>
+        <p>Use channels for their intended purpose. Post game news, friend codes, clips, memes, and links where they belong so people can find what they came for.</p>
+      </article>
+
+      <article class="rule" data-rune="ᚹ">
+        <span class="rule-number">Rule 04</span>
+        <h2>🚫 No spam, scams, or drive-by promotion</h2>
+        <p>No malicious links, mass mentions, repeated posts, unsolicited DMs, or advertising without permission. Share your work only in spaces made for it.</p>
+      </article>
+
+      <article class="rule" data-rune="ᛟ">
+        <span class="rule-number">Rule 05</span>
+        <h2>🔒 Protect people’s privacy</h2>
+        <p>Do not post private conversations, personal information, addresses, or identifying details without permission. What happens in a private conversation stays private.</p>
+      </article>
+
+      <article class="rule" data-rune="ᛇ">
+        <span class="rule-number">Rule 06</span>
+        <h2>⚔️ Mods use judgment, not scripts</h2>
+        <p>Context, intent, patterns, and severity all matter. Moderators may step in when behavior is wrecking the room, even if no sentence here describes it word for word. Appeal a decision privately instead of derailing the server.</p>
+      </article>
+
+      <article class="rule wide" data-rune="ᚺ">
+        <span class="rule-number">Rule 07</span>
+        <h2>🎙️ Voice channels have different energy</h2>
+        <p>Joining voice just to chill is always welcome. Don’t blast audio, talk over everyone nonstop, stream disturbing content, or ruin a focused game session.</p>
+        <div class="rooms">
+          <div class="room">
+            <strong>🌿 Smoking Lounge</strong>
+            <span>Casual conversation, background company, laughs, and low-pressure hanging out.</span>
+          </div>
+          <div class="room">
+            <strong>🎯 Gaming Room</strong>
+            <span>For squads, callouts, multiplayer sessions, and anyone trying to lock in.</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="rule wide" data-rune="ᛞ">
+        <span class="rule-number">Rule 08</span>
+        <h2>📜 Keep it legal and inside Discord’s rules</h2>
+        <p>No doxxing, scams, malware, credible threats, sexual content involving minors, or other illegal material. Discord’s Terms of Service and Community Guidelines still apply here. Free speech does not mean putting the server or its members at risk.</p>
+      </article>
+    </section>
+
+    <section class="oath">
+      <h2>⚡ The short version</h2>
+      <p>Say what you mean. Take what you dish out. Don’t threaten people, expose their private information, scam them, or make yourself the entire server’s problem.</p>
+    </section>
+
+    <footer>ᚷ JAXNIR’S HALL · ENTER WITH RESPECT · STAY FOR THE CHAOS ᚷ</footer>
+  </main>
+</body>
+</html>
